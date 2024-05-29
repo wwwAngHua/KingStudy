@@ -22,6 +22,33 @@ VITE_APP_SECRET_KEY = '***************'
 VITE_APP_T1Y_API = 'https://api.t1y.net'
 ```
 
+### share 云函数
+
+```js
+function main() {
+    ctx.setHeader('Content-Type', 'application/json')
+    if (ctx.query('token') != tool.md5('123456')) {
+        // 管理员密码123456
+        return JSON.stringify({
+            code: 400,
+            message: 'Invalid password',
+            data: null,
+        })
+    }
+    let objectId = db
+        .collection('archives')
+        .createOne(JSON.parse(ctx.getBody()))
+    if (objectId == null) {
+        return JSON.stringify({
+            code: 500,
+            message: 'Internal server error',
+            data: null,
+        })
+    }
+    return JSON.stringify({ code: 200, message: 'Share Success', data: null })
+}
+```
+
 ### Archives
 
 发布一篇帖子你只需要在 T1 后端云 `archives` 集合中添加以下类型数据即可（也可以通过 `/archives/add` 进行发布）：

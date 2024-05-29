@@ -26,6 +26,11 @@ const routes: Array<RouteRecordRaw> = [
         meta: { title: 'Preview' },
     },
     {
+        path: '/archives/add',
+        component: () => import('../views/archives/Add.vue'),
+        meta: { title: 'Add New Post to Archives' },
+    },
+    {
         path: '/projects',
         component: () => import('../views/projects/Projects.vue'),
         meta: { title: 'Projects' },

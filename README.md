@@ -22,6 +22,33 @@ VITE_APP_SECRET_KEY = '***************'
 VITE_APP_T1Y_API = 'https://api.t1y.net'
 ```
 
+### share Cloud Function
+
+```js
+function main() {
+    ctx.setHeader('Content-Type', 'application/json')
+    if (ctx.query('token') != tool.md5('123456')) {
+        // Admin password -> 123456
+        return JSON.stringify({
+            code: 400,
+            message: 'Invalid password',
+            data: null,
+        })
+    }
+    let objectId = db
+        .collection('archives')
+        .createOne(JSON.parse(ctx.getBody()))
+    if (objectId == null) {
+        return JSON.stringify({
+            code: 500,
+            message: 'Internal server error',
+            data: null,
+        })
+    }
+    return JSON.stringify({ code: 200, message: 'Share Success', data: null })
+}
+```
+
 ### Archives
 
 To publish a post, you only need to add the following types of data to the T1 backend cloud `archives` collection (you can also publish through `/archives/add`):
