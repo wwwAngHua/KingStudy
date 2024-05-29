@@ -1,0 +1,19 @@
+html,
+body {
+    margin: 0;
+    background-color: white;
+}
+a {
+    text-decoration: none;
+    color: white;
+}
+.router-link-active {
+    text-decoration: none;
+    color: white;
+}
+#nprogress .bar {
+    background-color: #30655f !important;
+}
+.github-markdown-body {
+    padding: 0 !important;
+}
