@@ -1,6 +1,11 @@
 export const initTheme = () => {
     document.body.style.setProperty('--el-color-primary', '#003b4f')
+    document.body.style.setProperty('--el-color-primary-light-2', '#003b4f')
     document.body.style.setProperty('--el-color-primary-light-3', '#003b4f')
+    document.body.style.setProperty('--el-color-primary-light-5', '#003b4f')
+    document.body.style.setProperty('--el-color-primary-dark-2', '#003b4f')
+    document.body.style.setProperty('--el-color-primary-dark-3', '#003b4f')
+    document.body.style.setProperty('--el-color-primary-dark-5', '#003b4f')
     document.body.style.setProperty('--el-color-success', '#67C23A')
     document.body.style.setProperty('--el-color-success-light-3', '#67C23A')
     document.body.style.setProperty('--el-color-danger', '#F56C6C')

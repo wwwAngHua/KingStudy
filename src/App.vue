@@ -1,7 +1,18 @@
 <script setup lang="ts">
 import { RouterView, RouterLink } from 'vue-router'
 import { initTheme } from './theme/theme'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 initTheme()
+
+const router = useRouter()
+
+const menuDisplay = ref(false)
+
+const goToPage = (path: string) => {
+    menuDisplay.value = false
+    router.push(path)
+}
 </script>
 
 <template>
@@ -23,7 +34,7 @@ initTheme()
                                 >
                             </div></el-col
                         >
-                        <el-col :span="14"
+                        <el-col :xs="0" :sm="14" :md="14" :lg="14" :xl="14"
                             ><div style="float: right">
                                 <el-text class="mx-1"
                                     ><RouterLink to="/"
@@ -62,11 +73,61 @@ initTheme()
                                 >
                             </div></el-col
                         >
+                        <el-col :xs="14" :sm="0" :md="0" :lg="0" :xl="0"
+                            ><div style="float: right">
+                                <el-button
+                                    :icon="menuDisplay ? 'Expand' : 'Fold'"
+                                    type="primary"
+                                    @click="menuDisplay = !menuDisplay"
+                                    >Menu</el-button
+                                >
+                            </div></el-col
+                        >
                     </el-row>
                 </div>
             </el-header>
-            <el-main>
-                <router-view></router-view>
+            <el-main style="padding: 0px">
+                <transition name="slide"
+                    ><div v-if="menuDisplay" class="menu">
+                        <el-text class="mx-1"
+                            ><a @click="goToPage('/')">Home</a></el-text
+                        >
+                        <br />
+                        <div class="box" />
+                        <el-text class="mx-1"
+                            ><a @click="goToPage('/archives')"
+                                >Archives</a
+                            ></el-text
+                        >
+                        <br />
+                        <div class="box" />
+                        <el-text class="mx-1"
+                            ><a @click="goToPage('/projects')"
+                                >Projects</a
+                            ></el-text
+                        >
+                        <br />
+                        <div class="box" />
+                        <el-text class="mx-1"
+                            ><a @click="goToPage('/courses')"
+                                >Courses</a
+                            ></el-text
+                        >
+                        <br />
+                        <div class="box" />
+                        <el-text class="mx-1"
+                            ><a @click="goToPage('/photos')">Photos</a></el-text
+                        >
+                        <br />
+                        <div class="box" />
+                        <el-text class="mx-1"
+                            ><a @click="goToPage('/about')">About</a></el-text
+                        >
+                    </div></transition
+                >
+                <div style="padding: 20px">
+                    <router-view></router-view>
+                </div>
             </el-main>
         </el-container>
     </div>
@@ -79,5 +140,28 @@ initTheme()
 .header {
     background: linear-gradient(to right, #02364b, #044054, #021f31);
     box-shadow: 0px 0px 3px 0.1px rgba(0, 0, 0, 0.5);
+}
+.slide-enter-active,
+.slide-leave-active {
+    transition: all 0.15s ease;
+}
+.slide-enter-from,
+.slide-leave-to {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+}
+.slide-enter-to,
+.slide-leave-from {
+    opacity: 1;
+}
+.menu {
+    width: 100%;
+    padding: 20px;
+    background: #044054;
+    overflow: hidden;
+}
+.box {
+    height: 5px;
 }
 </style>

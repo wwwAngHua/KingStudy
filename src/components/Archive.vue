@@ -45,7 +45,6 @@ getArchives()
                 <RouterLink :to="'/archives/' + data._id"
                     ><div class="archive-item">
                         <div
-                            class="background-image"
                             :style="{
                                 backgroundImage:
                                     'url(' + archiveUrls[index] + ')',
@@ -60,17 +59,18 @@ getArchives()
                                 position: relative;
                             ">
                             <div
-                                class="content-container"
                                 style="
                                     position: absolute;
                                     top: 50%;
                                     transform: translateY(-50%);
                                     margin-left: 80px;
+                                    max-width: 350%;
                                 ">
                                 <el-text
                                     class="mx-1"
                                     size="small"
                                     style="color: black"
+                                    truncated
                                     >{{ data.title }}</el-text
                                 >
                                 <br />
