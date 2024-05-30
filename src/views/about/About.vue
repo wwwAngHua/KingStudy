@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import avatar from '../../assets/wwwanghua.jpg'
+import qrCode from '../../assets/qr_code.png'
 </script>
 
 <template>
@@ -78,6 +79,10 @@ import avatar from '../../assets/wwwanghua.jpg'
                 Source</a
             >
         </el-text>
+        <br /><br />
+        <el-text class="mx-1" style="color: black">Buy me a coffee</el-text>
+        <br /><br />
+        <el-image :src="qrCode" fit="contain" style="height: 70px" />
         <br /><br />
         <el-text class="mx-1" style="color: black">About me</el-text>
         <br />
