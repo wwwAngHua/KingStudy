@@ -133,6 +133,14 @@ npm run dev
 npm run build
 ```
 
+## Nginx 伪静态
+
+```nginx
+location / {
+	try_files $uri $uri/ /index.html;
+}
+```
+
 ## 请我喝杯咖啡
 
 ![alt QR-Code](./src/assets/qr_code.png)
