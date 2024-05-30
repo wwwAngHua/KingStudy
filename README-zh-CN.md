@@ -24,6 +24,8 @@ VITE_APP_T1Y_API = 'https://api.t1y.net'
 
 ### share 云函数
 
+在 <a href="https://www.t1y.net/" target="_blank">T1 后端云</a> 云函数页面新建一个名为 `share` 的云函数，用于验证发布帖子。
+
 ```js
 function main() {
     ctx.setHeader('Content-Type', 'application/json')
@@ -51,7 +53,7 @@ function main() {
 
 ### Archives
 
-发布一篇帖子你只需要在 T1 后端云 `archives` 集合中添加以下类型数据即可（也可以通过 `/archives/add` 进行发布）：
+发布一篇帖子你只需要在 T1 后端云 `archives` 集合中添加以下类型数据即可（也可以通过访问 `/archives/add` 进行发布）：
 
 -   title 文章标题
 -   preview 预览图地址
@@ -131,10 +133,6 @@ npm run dev
 npm run build
 ```
 
-## Nginx 伪静态
+## 请我喝杯咖啡
 
-```nginx
-location / {
-	try_files $uri $uri/ /index.html;
-}
-```
+![alt QR-Code](./src/assets/qr_code.png)

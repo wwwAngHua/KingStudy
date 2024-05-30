@@ -24,6 +24,8 @@ VITE_APP_T1Y_API = 'https://api.t1y.net'
 
 ### share Cloud Function
 
+On the <a href="https://www.t1y.net/" target="_blank">T1 Backend Cloud</a> Cloud Function page, create a cloud function named `share` to verify the post.
+
 ```js
 function main() {
     ctx.setHeader('Content-Type', 'application/json')
@@ -51,7 +53,7 @@ function main() {
 
 ### Archives
 
-To publish a post, you only need to add the following types of data to the T1 backend cloud `archives` collection (you can also publish through `/archives/add`):
+To publish a post you only need to add the following types of data to the T1 backend cloud `archives` collection (you can also publish by accessing `/archives/add`):
 
 -   title article title
 -   preview preview image address
@@ -131,10 +133,6 @@ npm run dev
 npm run build
 ```
 
-## Nginx pseudo-static
+## Buy me a coffee
 
-```nginx
-location / {
-try_files $uri $uri/ /index.html;
-}
-```
+![alt QR-Code](./src/assets/qr_code.png)
