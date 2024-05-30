@@ -67,7 +67,7 @@ const router = createRouter({
     routes,
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
     NProgress.start()
     if (to.meta.title) {
         document.title =
@@ -78,7 +78,7 @@ router.beforeEach((to, from, next) => {
     next()
 })
 
-router.afterEach((to) => {
+router.afterEach((_to) => {
     NProgress.done()
 })
 
