@@ -76,14 +76,16 @@ import qrCode from '../../assets/qr_code.png'
                 href="https://www.github.com/wwwAngHua/KingStudy"
                 target="_blank"
                 style="color: #003b4f">
-                Source</a
+                Source (MIT)</a
             >
         </el-text>
         <br /><br />
         <el-text class="mx-1" style="color: black">Buy me a coffee</el-text>
         <br /><br />
-        <el-image :src="qrCode" fit="contain" style="height: 70px" />
-        <br /><br />
+        <div style="text-align: left">
+            <el-image :src="qrCode" fit="contain" style="height: 70px" />
+        </div>
+        <br />
         <el-text class="mx-1" style="color: black">About me</el-text>
         <br />
         <ul>

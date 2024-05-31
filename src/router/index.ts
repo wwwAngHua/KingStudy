@@ -31,6 +31,11 @@ const routes: Array<RouteRecordRaw> = [
         meta: { title: 'Add New Post to Archives' },
     },
     {
+        path: '/archives/edit/:pathMatch(.*)*',
+        component: () => import('../views/archives/Edit.vue'),
+        meta: { title: 'Edit' },
+    },
+    {
         path: '/projects',
         component: () => import('../views/projects/Projects.vue'),
         meta: { title: 'Projects' },

@@ -78,10 +78,10 @@ const shareArchive = async () => {
                         type="primary"
                         :loading="loading"
                         @click="shareArchive"
-                        >Share Post<el-icon class="el-icon--right"
-                            ><Promotion /></el-icon
-                    ></el-button></div
-            ></el-col>
+                        >Submit</el-button
+                    >
+                </div></el-col
+            >
         </el-row>
         <br /><br />
         <v-md-editor v-model="text" height="400px"></v-md-editor>
