@@ -3,16 +3,28 @@ import { RouterView, RouterLink } from 'vue-router'
 import { initTheme } from './theme/theme'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { T1YClient } from './api/t1y'
 initTheme()
 
 const router = useRouter()
 
 const menuDisplay = ref(false)
 
+const musicId = ref(0)
+const musicDisplay = ref(true)
+
+const getMusicId = async () => {
+    T1YClient.callFunc('music', {}).then((res: any) => {
+        musicId.value = res.data.link
+    })
+}
+
 const goToPage = (path: string) => {
     menuDisplay.value = false
     router.push(path)
 }
+
+getMusicId()
 </script>
 
 <template>
@@ -125,6 +137,28 @@ const goToPage = (path: string) => {
                         >
                     </div></transition
                 >
+                <div
+                    v-if="musicDisplay"
+                    style="margin-left: 10px; margin-right: 10px">
+                    <iframe
+                        auto="1"
+                        frameborder="no"
+                        width="100%"
+                        height="79"
+                        :src="`https://music.163.com/outchain/player?type=2&id=${musicId}&auto=1&height=66`"></iframe>
+                    <a
+                        href="javascript:void(0)"
+                        style="margin-left: 10px"
+                        @click="musicDisplay = false"
+                        ><el-text
+                            class="mx-1"
+                            size="small"
+                            style="color: #003b4f"
+                            ><el-icon><CircleCloseFilled /></el-icon
+                            >&nbsp;Close</el-text
+                        ></a
+                    >
+                </div>
                 <div style="padding: 20px">
                     <router-view></router-view>
                 </div>
