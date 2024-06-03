@@ -17,11 +17,11 @@ interface Archive {
 
 const text = ref('')
 const archive = ref<Archive>({
-    preview: 'https://api.t1y.net/storage/1500/photos/archives/',
+    preview: 'https://api.t1y.net/storage/1500/photos/archives/draft.png',
     views: 0,
-    title: 'Title',
+    title: 'Draft',
     tag: [],
-    description: '',
+    description: 'This is a draft.',
     content: '',
 })
 

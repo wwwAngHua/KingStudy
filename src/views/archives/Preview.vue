@@ -49,18 +49,19 @@ getPost()
     <div>
         <el-skeleton v-if="loading" :rows="10" animated />
         <div v-else>
-            <el-text class="mx-1" size="large" style="color: black">{{
-                archives.title
-            }}</el-text>
-            <el-tag
-                size="small"
-                round
-                v-for="(tag, tagIndex) in archives.tag"
-                :key="tagIndex"
-                style="margin-left: 5px"
-                >{{ tag }}</el-tag
-            >
-            <br />
+            <div style="display: flex; align-items: center">
+                <el-text class="mx-1" size="large" style="color: black">{{
+                    archives.title
+                }}</el-text>
+                <el-tag
+                    size="small"
+                    round
+                    v-for="(tag, tagIndex) in archives.tag"
+                    :key="tagIndex"
+                    style="margin-left: 5px"
+                    >{{ tag }}</el-tag
+                >
+            </div>
             <el-text class="mx-1" size="small">{{
                 archives.createdAt
             }}</el-text>

@@ -76,7 +76,7 @@ import qrCode from '../../assets/qr_code.png'
                 href="https://www.github.com/wwwAngHua/KingStudy"
                 target="_blank"
                 style="color: #003b4f">
-                Source (MIT)</a
+                Source (Apache-2.0 license)</a
             >
         </el-text>
         <br /><br />

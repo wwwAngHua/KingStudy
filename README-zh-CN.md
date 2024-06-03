@@ -1,6 +1,6 @@
 # KingStudy
 
-这是一个无需服务器的个人主页网站系统，包含博客系统、项目展示、课程展示、照片墙展示等等功能。该网站基于 <a href="https://www.t1y.net/" target="_blank">T1 后端云</a> `Serverless` 技术构建采用 Web 技术有（ Vue3 / Vite5 / TypeScript / MongoDB / Element Plus ）。
+这是一个无需服务器的个人主页网站系统，包含博客系统、项目展示、课程展示、照片墙展示等等功能。该网站基于 <a href="https://www.t1y.net/" target="_blank">T1 后端云</a> `Serverless` 技术构建采用 Web 技术有（<a href="https://vuejs.org/" target="_blank">Vue3</a> / <a href="https://vitejs.dev/" target="_blank">Vite5</a> / <a href="https://www.typescriptlang.org/" target="_blank">TypeScript</a> / <a href="https://www.mongodb.com/" target="_blank">MongoDB</a> / <a href="https://element-plus.org/" target="_blank">Element Plus</a>）.
 
 -   <a href="./README.md">English</a>
 -   <a href="https://kingstudy.vip/">预览</a>

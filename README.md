@@ -1,6 +1,6 @@
 # KingStudy
 
-This is a personal homepage website system that does not require a server, including a blog system, project display, course display, photo wall display and other functions. The website is built based on <a href="https://www.t1y.net/" target="_blank">T1 Backend Cloud</a> `Serverless` technology and uses Web technologies (Vue3 / Vite5 / TypeScript / MongoDB / Element Plus).
+This is a personal homepage website system that does not require a server, including a blog system, project display, course display, photo wall display and other functions. The website is built based on <a href="https://www.t1y.net/" target="_blank">T1 Backend Cloud</a> `Serverless` technology and uses Web technologies (<a href="https://vuejs.org/" target="_blank">Vue3</a> / <a href="https://vitejs.dev/" target="_blank">Vite5</a> / <a href="https://www.typescriptlang.org/" target="_blank">TypeScript</a> / <a href="https://www.mongodb.com/" target="_blank">MongoDB</a> / <a href="https://element-plus.org/" target="_blank">Element Plus</a>).
 
 -   <a href="./README-zh-CN.md">中文简体</a>
 -   <a href="https://kingstudy.vip/">Preview</a>
