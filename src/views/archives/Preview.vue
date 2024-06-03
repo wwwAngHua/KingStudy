@@ -52,6 +52,14 @@ getPost()
             <el-text class="mx-1" size="large" style="color: black">{{
                 archives.title
             }}</el-text>
+            <el-tag
+                size="small"
+                round
+                v-for="(tag, tagIndex) in archives.tag"
+                :key="tagIndex"
+                style="margin-left: 5px"
+                >{{ tag }}</el-tag
+            >
             <br />
             <el-text class="mx-1" size="small">{{
                 archives.createdAt

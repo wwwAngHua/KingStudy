@@ -11,7 +11,7 @@ const router = useRouter()
 const menuDisplay = ref(false)
 
 const musicId = ref(0)
-const musicDisplay = ref(true)
+const musicDisplay = ref(false)
 
 const getMusicId = async () => {
     T1YClient.callFunc('music', {}).then((res: any) => {
@@ -88,7 +88,6 @@ getMusicId()
                         <el-col :xs="14" :sm="0" :md="0" :lg="0" :xl="0"
                             ><div style="float: right">
                                 <el-button
-                                    :icon="menuDisplay ? 'Expand' : 'Fold'"
                                     type="primary"
                                     @click="menuDisplay = !menuDisplay"
                                     >Menu</el-button
