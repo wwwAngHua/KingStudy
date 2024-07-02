@@ -22,6 +22,31 @@ VITE_APP_SECRET_KEY = '***************'
 VITE_APP_T1Y_API = 'https://api.t1y.net'
 ```
 
+### music cloud function
+
+Create a cloud function named `music` on the <a href="https://www.t1y.net/" target="_blank">T1 Backend Cloud</a> cloud function page to return random NetEase Cloud Music.
+
+```json
+{
+    "link": 493276208,
+    "name": "Simple Song"
+}
+```
+
+```js
+function main() {
+    const result = db.collection('musics').aggregate([{ $sample: { size: 1 } }])
+    if (result == null) {
+        return JSON.stringify({
+            code: 500,
+            message: 'Internal server error',
+            data: null,
+        })
+    }
+    return JSON.stringify({ code: 200, message: 'ok', data: result[0] })
+}
+```
+
 ### share Cloud Function
 
 On the <a href="https://www.t1y.net/" target="_blank">T1 Backend Cloud</a> Cloud Function page, create a cloud function named `share` to verify the post.
@@ -30,7 +55,7 @@ On the <a href="https://www.t1y.net/" target="_blank">T1 Backend Cloud</a> Cloud
 function main() {
     ctx.setHeader('Content-Type', 'application/json')
     if (ctx.query('token') != tool.md5('123456')) {
-        // Admin password -> 123456
+        // Administrator password -> 123456
         return JSON.stringify({
             code: 400,
             message: 'Invalid password',
@@ -48,6 +73,101 @@ function main() {
         })
     }
     return JSON.stringify({ code: 200, message: 'Share Success', data: null })
+}
+```
+
+### edit cloud function
+
+Create a cloud function named `edit` on the <a href="https://www.t1y.net/" target="_blank">T1 Backend Cloud</a> cloud function page to edit published posts.
+
+```js
+function main() {
+    ctx.setHeader('Content-Type', 'application/json')
+    if (ctx.query('token') != tool.md5('123456')) {
+        // Administrator password 123456
+        return JSON.stringify({
+            code: 400,
+            message: 'Invalid password',
+            data: null,
+        })
+    }
+    let objectId = db
+        .collection('archives')
+        .updateOne(
+            { _id: db.toObjectID(ctx.query('id')) },
+            { $set: JSON.parse(ctx.getBody()) },
+        )
+    if (objectId == null) {
+        return JSON.stringify({
+            code: 500,
+            message: 'Internal server error',
+            data: null,
+        })
+    }
+    return JSON.stringify({
+        code: 200,
+        message: 'Successfully modified',
+        data: null,
+    })
+}
+```
+
+### ai_write cloud function
+
+Create a cloud function named `ai_write` on the <a href="https://www.t1y.net/" target="_blank">T1 Backend Cloud</a> cloud function page to access the <a href="https://platform.moonshot.cn/" target="_blank">Moonshot AI (Kimi AI)</a> open platform intelligent writing.
+
+```js
+function main() {
+    ctx.setHeader('Content-Type', 'application/json')
+    const token = 'sk-xxx' // Your Kimi AI open platform token
+    const model = 'moonshot-v1-32k' // model (8k-32k-128k)
+    const prompt =
+        'You are KingAI, an artificial intelligence writing assistant provided by KingStudy. You are better at writing Chinese and English articles (Blogs) from the first-person (author) perspective. You will provide users with safe, detailed, helpful and accurate articles. Next, I will provide you with the article title. You just need to write the content of the article according to the article title and return to the Markdown format. '
+    const temperature = 0.3
+    const title = JSON.parse(ctx.getBody()).title
+    if (title == '') {
+        return JSON.stringify({
+            code: 400,
+            message: 'The title can not be blank',
+            data: null,
+        })
+    }
+    let data = {
+        model: model,
+        messages: [
+            { role: 'system', content: prompt },
+            { role: 'user', content: title },
+        ],
+        temperature: 0.3,
+    }
+    const resp = http.send(
+        'POST',
+        'https://api.moonshot.cn/v1/chat/completions',
+        {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+        JSON.stringify(data),
+    )
+    if (resp == null) {
+        return JSON.stringify({
+            code: 500,
+            message: 'Internal server error',
+            data: null,
+        })
+    }
+    if (resp.statusCode != 200) {
+        return JSON.stringify({
+            code: 500,
+            message: 'Internal server error',
+            data: null,
+        })
+    }
+    return JSON.stringify({
+        code: 200,
+        message: 'Writing successfully',
+        data: { content: JSON.parse(resp.body).choices[0].message.content },
+    })
 }
 ```
 

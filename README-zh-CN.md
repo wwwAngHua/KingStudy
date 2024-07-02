@@ -22,6 +22,31 @@ VITE_APP_SECRET_KEY = '***************'
 VITE_APP_T1Y_API = 'https://api.t1y.net'
 ```
 
+### music 云函数
+
+在 <a href="https://www.t1y.net/" target="_blank">T1 后端云</a> 云函数页面新建一个名为 `music` 的云函数，用于返回随机网易云音乐。
+
+```json
+{
+    "link": 493276208,
+    "name": "Simple Song"
+}
+```
+
+```js
+function main() {
+    const result = db.collection('musics').aggregate([{ $sample: { size: 1 } }])
+    if (result == null) {
+        return JSON.stringify({
+            code: 500,
+            message: 'Internal server error',
+            data: null,
+        })
+    }
+    return JSON.stringify({ code: 200, message: 'ok', data: result[0] })
+}
+```
+
 ### share 云函数
 
 在 <a href="https://www.t1y.net/" target="_blank">T1 后端云</a> 云函数页面新建一个名为 `share` 的云函数，用于验证发布帖子。
@@ -48,6 +73,101 @@ function main() {
         })
     }
     return JSON.stringify({ code: 200, message: 'Share Success', data: null })
+}
+```
+
+### edit 云函数
+
+在 <a href="https://www.t1y.net/" target="_blank">T1 后端云</a> 云函数页面新建一个名为 `edit` 的云函数，用于编辑已发布的帖子。
+
+```js
+function main() {
+    ctx.setHeader('Content-Type', 'application/json')
+    if (ctx.query('token') != tool.md5('123456')) {
+        // 管理员密码123456
+        return JSON.stringify({
+            code: 400,
+            message: 'Invalid password',
+            data: null,
+        })
+    }
+    let objectId = db
+        .collection('archives')
+        .updateOne(
+            { _id: db.toObjectID(ctx.query('id')) },
+            { $set: JSON.parse(ctx.getBody()) },
+        )
+    if (objectId == null) {
+        return JSON.stringify({
+            code: 500,
+            message: 'Internal server error',
+            data: null,
+        })
+    }
+    return JSON.stringify({
+        code: 200,
+        message: 'Successfully modified',
+        data: null,
+    })
+}
+```
+
+### ai_write 云函数
+
+在 <a href="https://www.t1y.net/" target="_blank">T1 后端云</a> 云函数页面新建一个名为 `ai_write` 的云函数，用于接入 <a href="https://platform.moonshot.cn/" target="_blank">Moonshot AI（Kimi AI）</a> 开放平台智能写作。
+
+```js
+function main() {
+    ctx.setHeader('Content-Type', 'application/json')
+    const token = 'sk-xxx' // 你的 Kimi AI 开放平台 token
+    const model = 'moonshot-v1-32k' // model（8k-32k-128k）
+    const prompt =
+        '你是 KingAI，由 KingStudy 提供的人工智能写作助手，你更擅长从第一人称（作者）视角编写中文和英文的文章（Blog）。你会为用户提供安全、详细、有帮助且准确的文章。接下来我会提供文章标题给你，你只需要根据文章标题撰写该文章的内容并返回 Markdown 格式即可。'
+    const temperature = 0.3
+    const title = JSON.parse(ctx.getBody()).title
+    if (title == '') {
+        return JSON.stringify({
+            code: 400,
+            message: 'The title can not be blank',
+            data: null,
+        })
+    }
+    let data = {
+        model: model,
+        messages: [
+            { role: 'system', content: prompt },
+            { role: 'user', content: title },
+        ],
+        temperature: 0.3,
+    }
+    const resp = http.send(
+        'POST',
+        'https://api.moonshot.cn/v1/chat/completions',
+        {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+        JSON.stringify(data),
+    )
+    if (resp == null) {
+        return JSON.stringify({
+            code: 500,
+            message: 'Internal server error',
+            data: null,
+        })
+    }
+    if (resp.statusCode != 200) {
+        return JSON.stringify({
+            code: 500,
+            message: 'Internal server error',
+            data: null,
+        })
+    }
+    return JSON.stringify({
+        code: 200,
+        message: 'Writing successfully',
+        data: { content: JSON.parse(resp.body).choices[0].message.content },
+    })
 }
 ```
 
