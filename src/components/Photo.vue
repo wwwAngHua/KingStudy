@@ -17,6 +17,12 @@ const getPhotos = async () => {
     T1YClient.aggregate('photos', [
         { $match: {} },
         { $sort: { createdAt: -1 } },
+        {
+            $project: {
+                createdAt: 0,
+                updatedAt: 0,
+            },
+        },
     ]).then((res: any) => {
         photos.value = res.data.data
         if (res.data.data != null) {

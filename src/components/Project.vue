@@ -16,7 +16,15 @@ const projects = ref<Array<Project>>([])
 let projectUrls: string[]
 
 const getProjects = async () => {
-    T1YClient.aggregate('projects', [{ $match: {} }]).then((res: any) => {
+    T1YClient.aggregate('projects', [
+        { $match: {} },
+        {
+            $project: {
+                createdAt: 0,
+                updatedAt: 0,
+            },
+        },
+    ]).then((res: any) => {
         projects.value = res.data.data
         if (res.data.data != null) {
             projectUrls = projects.value.map((project) => project.preview)

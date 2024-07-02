@@ -8,9 +8,7 @@ interface Archive {
     _id: string
     preview: string
     title: string
-    tag: string[]
     description: string
-    content: string
 }
 
 const archives = ref<Array<Archive>>([])
@@ -20,6 +18,15 @@ const getArchives = async () => {
     T1YClient.aggregate('archives', [
         { $match: {} },
         { $sort: { createdAt: -1 } },
+        {
+            $project: {
+                content: 0,
+                tag: 0,
+                views: 0,
+                createdAt: 0,
+                updatedAt: 0,
+            },
+        },
     ]).then((res: any) => {
         archives.value = res.data.data
         if (res.data.data != null) {
