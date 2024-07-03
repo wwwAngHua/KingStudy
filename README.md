@@ -9,6 +9,10 @@ This is a personal homepage website system that does not require a server, inclu
 
 ## Use
 
+```bash
+cd kingstudy && npm install
+```
+
 Before use, you should go to <a href="https://www.t1y.net/" target="_blank">T1 Backend Cloud</a> to register an account and create an application. Then create a `.env` file in the project root directory and replace the following content:
 
 ```env
@@ -20,6 +24,26 @@ VITE_APP_API_KEY = '***************'
 VITE_APP_SECRET_KEY = '***************'
 # Your T1 backend cloud domain name (In a production environment, I recommend that you replace the domain name with your own domain name)
 VITE_APP_T1Y_API = 'https://api.t1y.net'
+```
+
+### Run
+
+```bash
+npm run dev
+```
+
+### Packaging & Building
+
+```bash
+npm run build
+```
+
+### Nginx pseudo-static
+
+```nginx
+location / {
+	try_files $uri $uri/ /index.html;
+}
 ```
 
 ### music cloud function
@@ -35,6 +59,13 @@ Create a cloud function named `music` on the <a href="https://www.t1y.net/" targ
 
 ```js
 function main() {
+    if (!ctx.sign()) {
+        return JSON.stringify({
+            code: 400,
+            message: 'Signature verification failed',
+            data: null,
+        })
+    }
     const result = db.collection('musics').aggregate([{ $sample: { size: 1 } }])
     if (result == null) {
         return JSON.stringify({
@@ -54,6 +85,13 @@ On the <a href="https://www.t1y.net/" target="_blank">T1 Backend Cloud</a> Cloud
 ```js
 function main() {
     ctx.setHeader('Content-Type', 'application/json')
+    if (!ctx.sign()) {
+        return JSON.stringify({
+            code: 400,
+            message: 'Signature verification failed',
+            data: null,
+        })
+    }
     if (ctx.query('token') != tool.md5('123456')) {
         // Administrator password -> 123456
         return JSON.stringify({
@@ -83,6 +121,13 @@ Create a cloud function named `edit` on the <a href="https://www.t1y.net/" targe
 ```js
 function main() {
     ctx.setHeader('Content-Type', 'application/json')
+    if (!ctx.sign()) {
+        return JSON.stringify({
+            code: 400,
+            message: 'Signature verification failed',
+            data: null,
+        })
+    }
     if (ctx.query('token') != tool.md5('123456')) {
         // Administrator password 123456
         return JSON.stringify({
@@ -119,6 +164,13 @@ Create a cloud function named `ai_write` on the <a href="https://www.t1y.net/" t
 ```js
 function main() {
     ctx.setHeader('Content-Type', 'application/json')
+    if (!ctx.sign()) {
+        return JSON.stringify({
+            code: 400,
+            message: 'Signature verification failed',
+            data: null,
+        })
+    }
     const token = 'sk-xxx' // Your Kimi AI open platform token
     const model = 'moonshot-v1-32k' // model (8k-32k-128k)
     const prompt =
@@ -238,26 +290,6 @@ To publish a photo, you only need to add the following types of data to the T1 b
     "location": "Yunnan",
     "preview": "https://api.t1y.net/storage/1500/photos/camera/sky.jpg",
     "title": "Sky"
-}
-```
-
-## Run
-
-```bash
-npm run dev
-```
-
-## Packaging & Building
-
-```bash
-npm run build
-```
-
-## Nginx pseudo-static
-
-```nginx
-location / {
-	try_files $uri $uri/ /index.html;
 }
 ```
 

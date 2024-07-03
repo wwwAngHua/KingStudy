@@ -9,6 +9,10 @@
 
 ## 使用
 
+```bash
+cd kingstudy && npm install
+```
+
 在使用前，您应当前往 <a href="https://www.t1y.net/" target="_blank">T1 后端云</a> 注册一个账号并创建一个应用。然后在项目根目录下创建一个 `.env` 文件，并替换以下内容：
 
 ```env
@@ -20,6 +24,26 @@ VITE_APP_API_KEY = '***************'
 VITE_APP_SECRET_KEY = '***************'
 # 您的T1后端云域名（生产环境下，我建议你将域名替换为你自己的域名）
 VITE_APP_T1Y_API = 'https://api.t1y.net'
+```
+
+### 运行
+
+```bash
+npm run dev
+```
+
+### 打包&构建
+
+```bash
+npm run build
+```
+
+### Nginx 伪静态
+
+```nginx
+location / {
+	try_files $uri $uri/ /index.html;
+}
 ```
 
 ### music 云函数
@@ -35,6 +59,13 @@ VITE_APP_T1Y_API = 'https://api.t1y.net'
 
 ```js
 function main() {
+    if (!ctx.sign()) {
+        return JSON.stringify({
+            code: 400,
+            message: 'Signature verification failed',
+            data: null,
+        })
+    }
     const result = db.collection('musics').aggregate([{ $sample: { size: 1 } }])
     if (result == null) {
         return JSON.stringify({
@@ -54,6 +85,13 @@ function main() {
 ```js
 function main() {
     ctx.setHeader('Content-Type', 'application/json')
+    if (!ctx.sign()) {
+        return JSON.stringify({
+            code: 400,
+            message: 'Signature verification failed',
+            data: null,
+        })
+    }
     if (ctx.query('token') != tool.md5('123456')) {
         // 管理员密码123456
         return JSON.stringify({
@@ -83,6 +121,13 @@ function main() {
 ```js
 function main() {
     ctx.setHeader('Content-Type', 'application/json')
+    if (!ctx.sign()) {
+        return JSON.stringify({
+            code: 400,
+            message: 'Signature verification failed',
+            data: null,
+        })
+    }
     if (ctx.query('token') != tool.md5('123456')) {
         // 管理员密码123456
         return JSON.stringify({
@@ -119,6 +164,13 @@ function main() {
 ```js
 function main() {
     ctx.setHeader('Content-Type', 'application/json')
+    if (!ctx.sign()) {
+        return JSON.stringify({
+            code: 400,
+            message: 'Signature verification failed',
+            data: null,
+        })
+    }
     const token = 'sk-xxx' // 你的 Kimi AI 开放平台 token
     const model = 'moonshot-v1-32k' // model（8k-32k-128k）
     const prompt =
@@ -238,26 +290,6 @@ interface Course {
     "location": "Yunnan",
     "preview": "https://api.t1y.net/storage/1500/photos/camera/sky.jpg",
     "title": "Sky"
-}
-```
-
-## 运行
-
-```bash
-npm run dev
-```
-
-## 打包&构建
-
-```bash
-npm run build
-```
-
-## Nginx 伪静态
-
-```nginx
-location / {
-	try_files $uri $uri/ /index.html;
 }
 ```
 

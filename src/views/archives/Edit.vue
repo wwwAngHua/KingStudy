@@ -4,6 +4,7 @@ import { T1YClient } from '../../api/t1y.ts'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { MD5 } from 'crypto-js'
 import { useRoute } from 'vue-router'
+import aiSvg from '../../assets/ai_write.svg'
 
 const loading = ref(true)
 
@@ -72,6 +73,48 @@ const editArchive = async () => {
     }
 }
 
+const aiWrite = async () => {
+    ElMessageBox.prompt(
+        'Please enter the article title and let AI help you complete the article.',
+        'AI writing',
+        {
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel',
+            async beforeClose(action, instance, done) {
+                if (action === 'confirm') {
+                    instance.confirmButtonLoading = true
+                    instance.confirmButtonText = 'Writing...'
+                    try {
+                        const value = instance.inputValue as string
+                        const res = (await T1YClient.callFunc('ai_write', {
+                            title: value,
+                        })) as {
+                            code: number
+                            message: string
+                            data: { content: string }
+                        }
+                        if (res.code !== 200) {
+                            ElMessage.error(res.message)
+                            instance.confirmButtonLoading = false
+                            instance.confirmButtonText = 'OK'
+                        } else {
+                            text.value = res.data.content
+                            ElMessage.success(res.message)
+                            done()
+                        }
+                    } catch (error) {
+                        ElMessage.error('Request failed')
+                        instance.confirmButtonLoading = false
+                        instance.confirmButtonText = 'OK'
+                    }
+                } else {
+                    done()
+                }
+            },
+        },
+    ).catch(() => {})
+}
+
 getPost()
 </script>
 
@@ -99,6 +142,9 @@ getPost()
                             align-items: center;
                             float: right;
                         ">
+                        <el-button type="primary" @click="aiWrite"
+                            ><img :src="aiSvg"
+                        /></el-button>
                         <el-button type="primary" @click="editArchive"
                             >Submit</el-button
                         >
