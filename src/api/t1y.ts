@@ -81,4 +81,12 @@ export class T1YClient {
     static async get_auth_token_status(token: string) {
         return request(`/1502/status?t=${token}`, {}, 'post')
     }
+    // 获取临时笔记
+    static async get_temp_notes(name: string) {
+        return request(
+            `/${import.meta.env.VITE_APP_APP_ID}/note?name=${name}`,
+            {},
+            'get',
+        )
+    }
 }

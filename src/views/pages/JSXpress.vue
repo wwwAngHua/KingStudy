@@ -1,19 +1,23 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { T1YClient } from '../../api/t1y'
-import { ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 const code = ref('')
 const loading = ref(false)
 
 const getAuthTokenStatus = async () => {
-    loading.value = true
-    T1YClient.get_auth_token_status(code.value).then((res: any) => {
-        loading.value = false
-        ElMessageBox.alert(res, '查询结果', {
-            confirmButtonText: 'OK',
+    if (code.value.length != 32) {
+        ElMessage.info('请输入有效的 AUTH_TOKEN！')
+    } else {
+        loading.value = true
+        T1YClient.get_auth_token_status(code.value).then((res: any) => {
+            loading.value = false
+            ElMessageBox.alert(res, '查询结果', {
+                confirmButtonText: 'OK',
+            })
         })
-    })
+    }
 }
 </script>
 

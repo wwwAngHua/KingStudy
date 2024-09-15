@@ -19,7 +19,7 @@ let archiveUrls: string[]
 
 let filter: Array<any> = [
     { $match: {} },
-    { $sort: { createdAt: -1 } },
+    { $sort: { createdAt: route.fullPath == '/' ? 1 : -1 } },
     {
         $project: {
             content: 0,
@@ -33,7 +33,7 @@ let filter: Array<any> = [
 
 const getArchives = async () => {
     if (route.fullPath == '/') {
-        filter.push({ $limit: 3 })
+        filter.push({ $limit: 1 })
     }
     T1YClient.aggregate('archives', filter).then((res: any) => {
         archives.value = res.data.data

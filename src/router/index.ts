@@ -56,9 +56,14 @@ const routes: Array<RouteRecordRaw> = [
         meta: { title: 'About' },
     },
     {
-        path: '/pages/jsxpress',
+        path: '/page/jsxpress',
         component: () => import('../views/pages/JSXpress.vue'),
         meta: { title: 'JSXpress' },
+    },
+    {
+        path: '/page/notes/:pathMatch(.*)*',
+        component: () => import('../views/pages/Notes.vue'),
+        meta: { title: 'Notes' },
     },
     {
         path: '/403',
