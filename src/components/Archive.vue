@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { T1YClient } from '../api/t1y.ts'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 const loading = ref(true)
 
@@ -14,20 +17,25 @@ interface Archive {
 const archives = ref<Array<Archive>>([])
 let archiveUrls: string[]
 
-const getArchives = async () => {
-    T1YClient.aggregate('archives', [
-        { $match: {} },
-        { $sort: { createdAt: -1 } },
-        {
-            $project: {
-                content: 0,
-                tag: 0,
-                views: 0,
-                createdAt: 0,
-                updatedAt: 0,
-            },
+let filter: Array<any> = [
+    { $match: {} },
+    { $sort: { createdAt: -1 } },
+    {
+        $project: {
+            content: 0,
+            tag: 0,
+            views: 0,
+            createdAt: 0,
+            updatedAt: 0,
         },
-    ]).then((res: any) => {
+    },
+]
+
+const getArchives = async () => {
+    if (route.fullPath == '/') {
+        filter.push({ $limit: 3 })
+    }
+    T1YClient.aggregate('archives', filter).then((res: any) => {
         archives.value = res.data.data
         if (res.data.data != null) {
             archiveUrls = archives.value.map((archive) => archive.preview)
