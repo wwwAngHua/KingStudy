@@ -56,6 +56,11 @@ const routes: Array<RouteRecordRaw> = [
         meta: { title: 'About' },
     },
     {
+        path: '/pages/jsxpress',
+        component: () => import('../views/pages/JSXpress.vue'),
+        meta: { title: 'JSXpress' },
+    },
+    {
         path: '/403',
         component: () => import('../views/403.vue'),
         meta: { title: '403 Forbidden' },

@@ -77,4 +77,8 @@ export class T1YClient {
             'post',
         )
     }
+    // 查询 AUTH_TOKEN 状态
+    static async get_auth_token_status(token: string) {
+        return request(`/1502/status?t=${token}`, {}, 'post')
+    }
 }
