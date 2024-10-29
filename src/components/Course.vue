@@ -22,7 +22,7 @@ const getCourses = async () => {
     ]).then((res: any) => {
         courses.value = res.data.data
         if (res.data.data != null) {
-            courseUrls = courses.value.map((Course) => Course.preview)
+            courseUrls = courses.value.map((course) => course.preview)
         }
         loading.value = false
     })

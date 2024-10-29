@@ -2,6 +2,8 @@
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { T1YClient } from '../../api/t1y.ts'
+import wwwanghua from '../../assets/wwwanghua.jpg'
+import { formatDate } from '../../utils/date.ts'
 
 const loading = ref(true)
 
@@ -62,10 +64,11 @@ getPost()
                     >{{ tag }}</el-tag
                 >
             </div>
-            <el-text class="mx-1" size="small">{{
-                archives.createdAt
-            }}</el-text>
-            <br />
+            <div style="margin-top: 5px;display: flex;align-items: center;">
+                <el-avatar :size="20" :src="wwwanghua" />&nbsp;
+                <el-text class="mx-1" size="small">王华</el-text>&nbsp;
+                <el-text class="mx-1" size="small">Created at {{ formatDate(archives.createdAt) }}</el-text>
+            </div>
             <el-text class="mx-1" size="small"
                 >Views: {{ archives.views }}</el-text
             >
@@ -75,6 +78,8 @@ getPost()
                     <v-md-preview :text="archives.content"></v-md-preview>
                 </small>
             </div>
+            <el-divider border-style="dashed" />
+            <el-text class="mx-1" style="color: black;"><strong>Copyright Notice:</strong> This article is original content owned by <a href="https://www.kingstudy.vip/" target="_blank" style="color: #0366D6;">kingstudy.vip</a> Unauthorized reproduction, citation, or commercial use is prohibited. For permissions or collaborations, please contact the author and credit the original source.</el-text>
         </div>
     </div>
 </template>

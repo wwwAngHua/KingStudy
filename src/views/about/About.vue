@@ -8,8 +8,7 @@ import qrCode from '../../assets/qr_code.png'
         <el-text class="mx-1" style="color: black">About</el-text>
         <br />
         <el-text class="mx-1" size="small"
-            >Hello 👋, I am Wang Hua (王华), here you can see all the
-            information about me and this website.</el-text
+            >Hello 👋, I am Wanghua (王华). Here you can see all the information about me and this website.</el-text
         >
         <br />
         <el-text class="mx-1" size="small"
@@ -64,7 +63,7 @@ import qrCode from '../../assets/qr_code.png'
             <el-avatar :size="50" :src="avatar" />
             &nbsp;
             <el-text class="mx-1" style="color: black"
-                ><strong>Wang Hua (王华)</strong></el-text
+                ><strong>Wanghua (王华)</strong></el-text
             >
         </div>
         <br />

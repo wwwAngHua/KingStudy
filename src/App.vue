@@ -31,8 +31,8 @@ getMusicId()
     <div class="container">
         <el-container>
             <el-header class="header">
-                <div>
-                    <el-row style="padding-top: 15px">
+                <div style="padding-top: 15px">
+                    <el-row>
                         <el-col :span="10"
                             ><div>
                                 <el-text class="mx-1"
@@ -46,7 +46,7 @@ getMusicId()
                                 >
                             </div></el-col
                         >
-                        <el-col :xs="0" :sm="14" :md="14" :lg="14" :xl="14"
+                        <el-col id="menuCol" :xs="0" :sm="14" :md="14" :lg="14" :xl="14"
                             ><div style="float: right">
                                 <el-text class="mx-1"
                                     ><RouterLink to="/"
@@ -65,12 +65,12 @@ getMusicId()
                                         >Projects</RouterLink
                                     ></el-text
                                 >
-                                &nbsp;&nbsp;
+                                <!--&nbsp;&nbsp;
                                 <el-text class="mx-1"
                                     ><RouterLink to="/courses"
                                         >Courses</RouterLink
                                     ></el-text
-                                >
+                                >-->
                                 &nbsp;&nbsp;
                                 <el-text class="mx-1"
                                     ><RouterLink to="/photos"
@@ -85,7 +85,7 @@ getMusicId()
                                 >
                             </div></el-col
                         >
-                        <el-col :xs="14" :sm="0" :md="0" :lg="0" :xl="0"
+                        <el-col id="menuBtn" :xs="14" :sm="0" :md="0" :lg="0" :xl="0"
                             ><div style="float: right">
                                 <el-button
                                     type="primary"
@@ -117,13 +117,13 @@ getMusicId()
                                 >Projects</a
                             ></el-text
                         >
-                        <br />
+                        <!--<br />
                         <div class="box" />
                         <el-text class="mx-1"
                             ><a @click="goToPage('/courses')"
                                 >Courses</a
                             ></el-text
-                        >
+                        >-->
                         <br />
                         <div class="box" />
                         <el-text class="mx-1"
@@ -196,5 +196,13 @@ getMusicId()
 }
 .box {
     height: 5px;
+}
+@media print {
+    #menuCol {
+        margin-top: -19px;
+    }
+    #menuBtn {
+        display: none !important;
+    }
 }
 </style>
