@@ -16,6 +16,10 @@ cd kingstudy && npm install
 Before use, you should go to <a href="https://www.t1y.net/" target="_blank">T1 Backend Cloud</a> to register an account and create an application. Then create a `.env` file in the project root directory and replace the following content:
 
 ```env
+# Your Web Service Prot
+VITE_APP_PORT = 5173
+# Proxy Path
+VITE_APP_BASE_API = '/api'
 # Your Application ID
 VITE_APP_APP_ID = '1001'
 # Your API Key
@@ -23,7 +27,7 @@ VITE_APP_API_KEY = '***************'
 # Your Secret Key
 VITE_APP_SECRET_KEY = '***************'
 # Your T1 backend cloud domain name (In a production environment, I recommend that you replace the domain name with your own domain name)
-VITE_APP_T1Y_API = 'https://api.t1y.net'
+VITE_APP_T1_CLOUD_SERVICE_DOMAIN = 'https://api.t1y.net'
 ```
 
 ### Run

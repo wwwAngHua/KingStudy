@@ -16,6 +16,10 @@ cd kingstudy && npm install
 在使用前，您应当前往 <a href="https://www.t1y.net/" target="_blank">T1 后端云</a> 注册一个账号并创建一个应用。然后在项目根目录下创建一个 `.env` 文件，并替换以下内容：
 
 ```env
+# Web 服务端口
+VITE_APP_PORT = 5173
+# 反向代理路径
+VITE_APP_BASE_API = '/api'
 # 您的 Application ID
 VITE_APP_APP_ID = '1001'
 # 您的 API Key
@@ -23,7 +27,7 @@ VITE_APP_API_KEY = '***************'
 # 您的 Secret Key
 VITE_APP_SECRET_KEY = '***************'
 # 您的T1后端云域名（生产环境下，我建议你将域名替换为你自己的域名）
-VITE_APP_T1Y_API = 'https://api.t1y.net'
+VITE_APP_T1_CLOUD_SERVICE_DOMAIN = 'https://api.t1y.net'
 ```
 
 ### 运行
