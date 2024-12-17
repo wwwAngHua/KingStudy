@@ -84,8 +84,8 @@ export class T1YClient {
     // 获取临时笔记
     static async get_temp_notes(name: string) {
         return request(
-            `/${import.meta.env.VITE_APP_APP_ID}/note?name=${name}`,
-            {},
+            `/${import.meta.env.VITE_APP_APP_ID}/note`,
+            {name: name},
             'get',
         )
     }
