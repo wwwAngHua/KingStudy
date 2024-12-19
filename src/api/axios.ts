@@ -17,7 +17,7 @@ axios.interceptors.request.use((config) => {
         config.headers['X-T1Y-Api-Key'] = import.meta.env.VITE_APP_API_KEY
         config.headers['X-T1Y-Safe-NonceStr'] = nonceStr
         config.headers['X-T1Y-Safe-Timestamp'] = timestamp
-        config.headers['X-T1Y-Safe-Sign'] = MD5(config.url + import.meta.env.VITE_APP_APP_ID + import.meta.env.VITE_APP_API_KEY + nonceStr + timestamp + import.meta.env.VITE_APP_SECRET_KEY).toString()
+        config.headers['X-T1Y-Safe-Sign'] = MD5(new URL(import.meta.env.VITE_APP_T1_CLOUD_SERVICE_DOMAIN + config.url).pathname + import.meta.env.VITE_APP_APP_ID + import.meta.env.VITE_APP_API_KEY + nonceStr + timestamp + import.meta.env.VITE_APP_SECRET_KEY).toString()
     }
     return config
     },
