@@ -1,50 +1,48 @@
-<script setup>
-import { ref, reactive, watch, onMounted } from 'vue'
+<script setup lang="ts">
+import { ref, reactive, onMounted } from 'vue'
 import TinyWhiteboard from 'tiny-whiteboard'
 
-const type = ref('freedraw')
-const container = ref(null)
-let app = null // 添加一个全局变量来保存TinyWhiteboard实例
-const activeElement = ref(null) // 用于存储当前激活的元素
-const selectedElements = ref([]) // 用于存储当前选中的元素
-const showStyleEditor = ref(false) // 控制样式编辑器的显示
+// 定义工具类型
+const type = ref<'freedraw' | 'selection' | 'rectangle' | 'diamond' | 'triangle' | 'circle' | 'line' | 'arrow' | 'text' | 'image'>('freedraw')
+const container = ref<HTMLElement | null>(null)
+let app: InstanceType<typeof TinyWhiteboard> | null = null // 用 InstanceType 获取 TinyWhiteboard 的实例类型
+
+// 用于存储当前激活的元素和选中的元素
+const activeElement = ref<any | null>(null)
+const selectedElements = ref<any[]>([])
+
+// 控制样式编辑器的显示
+const showStyleEditor = ref<boolean>(false)
 
 onMounted(() => {
     app = new TinyWhiteboard({
-        container: container.value,
+        container: container.value as HTMLElement, // 强制类型转换为 HTMLElement
         drawType: type.value,
         state: {
             scrollStep: 0,
         }
     })
-    app.on('activeElementChange', element => {
+
+    // 设置 activeElementChange 事件的监听
+    app.on('activeElementChange', (element: any) => {
         activeElement.value = element
-        if (element) {
-            showStyleEditor.value = true
-        } else {
-            showStyleEditor.value = false
-        }
+        showStyleEditor.value = !!element
     })
-    app.on('multiSelectChange', elements => {
+
+    // 设置 multiSelectChange 事件的监听
+    app.on('multiSelectChange', (elements: any[]) => {
         selectedElements.value = elements
-        if (elements.length > 0) {
-            showStyleEditor.value = true
-        } else {
-            showStyleEditor.value = false
-        }
+        showStyleEditor.value = elements.length > 0
     })
 })
 
-const setType = (newType) => {
+// 更新画板工具类型
+const setType = (newType: 'freedraw' | 'selection' | 'rectangle' | 'diamond' | 'triangle' | 'circle' | 'line' | 'arrow' | 'text' | 'image'): void => {
     type.value = newType
     if (app) {
         app.updateCurrentType(newType)
     }
-    if (newType === 'selection' && selectedElements.value.length > 0) {
-        showStyleEditor.value = true
-    } else {
-        showStyleEditor.value = false
-    }
+    showStyleEditor.value = (newType === 'selection' && selectedElements.value.length > 0)
 }
 
 // 样式状态
@@ -56,11 +54,11 @@ const style = reactive({
     globalAlpha: 1
 })
 
-const updateStyle = (key, value) => {
+// 更新选中元素的样式
+const updateStyle = (key: keyof typeof style, value: string | number | (string | number)[]): void => {
     const elements = selectedElements.value.concat(activeElement.value ? [activeElement.value] : [])
     elements.forEach(element => {
         element.style[key] = value
-        //app.updateActiveElementStyle(element)
     })
     showStyleEditor.value = true
 }
@@ -87,18 +85,18 @@ const updateStyle = (key, value) => {
             <div>
                 <div class="color-block">
                     <el-text class="mx-1" size="small">描边颜色：</el-text>
-                    <el-color-picker v-model="style.strokeStyle" size="small" @change="(value) => updateStyle('strokeStyle', value)"/>
+                    <el-color-picker v-model="style.strokeStyle" size="small" @change="(value: string) => updateStyle('strokeStyle', value)"/>
                 </div>
                 <div class="color-block">
                     <el-text class="mx-1" size="small">填充颜色：</el-text>
-                    <el-color-picker v-model="style.fillStyle" size="small" @change="(value) => updateStyle('fillStyle', value)"/>
+                    <el-color-picker v-model="style.fillStyle" size="small" @change="(value: string) => updateStyle('fillStyle', value)"/>
                 </div>
             </div>
             <div>
-                <el-slider v-model="style.lineWidth" size="small" @change="(value) => updateStyle('lineWidth', value)" :min="1" :max="10"/>
+                <el-slider v-model="style.lineWidth" size="small" @change="(value: number) => updateStyle('lineWidth', value)" :min="1" :max="10"/>
             </div>
             <div>
-                <el-slider v-model="style.globalAlpha" size="small" @change="(value) => updateStyle('globalAlpha', value)" :min="0" :max="1" :step="0.1"/>
+                <el-slider v-model="style.globalAlpha" size="small" @change="(value: number) => updateStyle('globalAlpha', value)" :min="0" :max="1" :step="0.1"/>
             </div>
         </el-card>
     </div>
