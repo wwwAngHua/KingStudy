@@ -16,6 +16,7 @@
         "element-plus": "^2.6.3",
         "nprogress": "^0.2.0",
         "three": "^0.163.0",
+        "tiny-whiteboard": "^0.1.12",
         "uuid": "^9.0.1",
         "vue": "^3.4.21",
         "vue-router": "^4.3.0"

@@ -66,6 +66,11 @@ const routes: Array<RouteRecordRaw> = [
         meta: { title: 'Notes' },
     },
     {
+        path: '/page/whiteboard',
+        component: () => import('../views/pages/WhiteBoard.vue'),
+        meta: { title: 'WhiteBoard' },
+    },
+    {
         path: '/403',
         component: () => import('../views/403.vue'),
         meta: { title: '403 Forbidden' },
