@@ -19,6 +19,7 @@ const getTempNotes = async () => {
     T1YClient.get_temp_notes(param).then((res: any) => {
         text.value = res
         vLoading.value = false
+        editing.value = res == ''
     })
 }
 
