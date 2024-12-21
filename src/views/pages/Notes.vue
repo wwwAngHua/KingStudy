@@ -66,7 +66,7 @@ getTempNotes()
             <el-col :span="16"
                 ><div>
                     <el-text class="mx-1" style="color: black"
-                        >Hello, 王华 👋</el-text
+                        >Hello, I am 王华 👋</el-text
                     >
                     <br />
                     <el-text class="mx-1" size="small"

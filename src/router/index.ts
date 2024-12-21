@@ -71,6 +71,11 @@ const routes: Array<RouteRecordRaw> = [
         meta: { title: 'WhiteBoard' },
     },
     {
+        path: '/page/tik',
+        component: () => import('../views/pages/Tik.vue'),
+        meta: { title: 'Tik' },
+    },
+    {
         path: '/403',
         component: () => import('../views/403.vue'),
         meta: { title: '403 Forbidden' },
