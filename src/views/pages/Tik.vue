@@ -9,6 +9,7 @@ const questionList = ref<any[]>([]);
 
 // 初始化为空字符串，因为单选题需要一个单一的字符串
 const userAnswer = ref<any>('');
+const showAnswer = ref(false)
 
 // 根据题目类型动态设置 userAnswer 的类型
 const setUserAnswerType = (questionType: string) => {
@@ -56,6 +57,7 @@ const beforeUpload = (file: File) => {
 
 // 检查答案
 const checkAnswer = () => {
+  showAnswer.value = false;
   const question = questionList.value[currentIndex.value];
   if (question.questionType === '多选题') {
     if (Array.isArray(userAnswer.value) && userAnswer.value.sort().join(',') === question.correctAnswer.split(',').sort().join(',')) {
@@ -64,6 +66,7 @@ const checkAnswer = () => {
       nextQuestion();
     } else {
       playSound(false);
+      showAnswer.value = true;
       //ElMessage.error('答错了！');
     }
   } else {
@@ -73,6 +76,7 @@ const checkAnswer = () => {
       nextQuestion();
     } else {
       playSound(false);
+      showAnswer.value = true;
       //ElMessage.error('答错了！');
     }
   }
@@ -151,7 +155,7 @@ const numberToLetter = (num: number): string => {
                 <!-- 根据题目类型动态渲染不同的组件 -->
                 <div v-if="questionList[currentIndex].questionType === '单选题'">
                 <el-radio-group v-model="userAnswer">
-                    <div style="margin-top: 10px;margin-left: 5px;margin-bottom: 10px;">
+                    <div style="margin-top: 10px;margin-left: 5px;">
                         <el-radio v-for="(option, index) in questionList[currentIndex].options" :key="index" :value="String.fromCharCode(65 + index)" style="display: block;">
                             <span>{{numberToLetter(index) }}</span>.{{ option }}
                         </el-radio>
@@ -160,7 +164,7 @@ const numberToLetter = (num: number): string => {
                 </div>
                 <div v-else-if="questionList[currentIndex].questionType === '多选题'">
                 <el-checkbox-group v-model="userAnswer">
-                    <div style="margin-top: 10px;margin-left: 5px;margin-bottom: 10px;display: flex;flex-direction: column;">
+                    <div style="margin-top: 10px;margin-left: 5px;display: flex;flex-direction: column;">
                         <el-checkbox v-for="(option, index) in questionList[currentIndex].options" :key="index" :value="String.fromCharCode(65 + index)">
                             <span>{{numberToLetter(index) }}</span>.{{ option }}
                         </el-checkbox>
@@ -169,12 +173,15 @@ const numberToLetter = (num: number): string => {
                 </div>
                 <div v-else-if="questionList[currentIndex].questionType === '判断题'">
                 <el-radio-group v-model="userAnswer">
-                    <div style="margin-top: 10px;margin-left: 5px;margin-bottom: 10px;">
+                    <div style="margin-top: 10px;margin-left: 5px;">
                         <el-radio value="A">A.正确</el-radio>
                         <br />
                         <el-radio value="B">B.错误</el-radio>
                     </div>
                 </el-radio-group>
+                </div>
+                <div v-if="showAnswer" style="margin-bottom: 10px;">
+                  <el-text class="mx-1" size="small" style="color: red;">答案错误！正确答案为：{{ questionList[currentIndex].correctAnswer }}</el-text>
                 </div>
             </div>
             <el-button-group>
