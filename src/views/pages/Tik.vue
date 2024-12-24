@@ -151,13 +151,13 @@ const numberToLetter = (num: number): string => {
         <div v-if="showNextButton">
             <div v-if="questionList.length > 0">
             <div>
-                <el-text class="mx-1" style="display: flex;align-items: center;"><el-tag type="primary" size="small" effect="dark">{{ questionList[currentIndex].questionType }}</el-tag>&nbsp;{{ (currentIndex + 1) + '.' + questionList[currentIndex].question }}</el-text>
+                <el-text class="mx-1" style="display: flex;align-items: center;"><el-tag type="primary" size="small" effect="dark">{{ questionList[currentIndex].questionType }}</el-tag>&nbsp;{{ (currentIndex + 1) + '.' }}<span v-html="questionList[currentIndex].question"></span></el-text>
                 <!-- 根据题目类型动态渲染不同的组件 -->
                 <div v-if="questionList[currentIndex].questionType === '单选题'">
                 <el-radio-group v-model="userAnswer">
                     <div style="margin-top: 10px;margin-left: 5px;">
                         <el-radio v-for="(option, index) in questionList[currentIndex].options" :key="index" :value="String.fromCharCode(65 + index)" style="display: block;">
-                            <span>{{numberToLetter(index) }}</span>.{{ option }}
+                            <span>{{numberToLetter(index) }}</span>.<span v-html="option"></span>
                         </el-radio>
                     </div>
                 </el-radio-group>
@@ -166,7 +166,7 @@ const numberToLetter = (num: number): string => {
                 <el-checkbox-group v-model="userAnswer">
                     <div style="margin-top: 10px;margin-left: 5px;display: flex;flex-direction: column;">
                         <el-checkbox v-for="(option, index) in questionList[currentIndex].options" :key="index" :value="String.fromCharCode(65 + index)">
-                            <span>{{numberToLetter(index) }}</span>.{{ option }}
+                            <span>{{numberToLetter(index) }}</span>.<span v-html="option"></span>
                         </el-checkbox>
                     </div>
                 </el-checkbox-group>
