@@ -76,6 +76,11 @@ const routes: Array<RouteRecordRaw> = [
         meta: { title: 'Tik' },
     },
     {
+        path: '/page/chat',
+        component: () => import('../views/pages/Chat.vue'),
+        meta: { title: 'Chat' },
+    },
+    {
         path: '/403',
         component: () => import('../views/403.vue'),
         meta: { title: '403 Forbidden' },

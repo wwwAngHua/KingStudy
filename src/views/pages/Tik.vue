@@ -2,6 +2,12 @@
 import { ref } from 'vue';
 import * as XLSX from 'xlsx';
 import { ElMessage, ElNotification } from 'element-plus';
+import { T1YClient } from '../../api/t1y.ts';
+
+const drawer = ref(false);
+const loading = ref(true);
+
+const aiAnalysisText = ref('')
 
 // 保存题目的数据
 const currentIndex = ref(0);
@@ -90,6 +96,8 @@ const playSound = (isCorrect: boolean) => {
 
 // 切换到下一题
 const nextQuestion = () => {
+  aiAnalysisText.value = '';
+  loading.value = true;
   if (currentIndex.value < questionList.value.length - 1) {
     currentIndex.value++;
     setUserAnswerType(questionList.value[currentIndex.value].questionType); // 设置正确的答案类型
@@ -124,6 +132,18 @@ const numberToLetter = (num: number): string => {
     }
     return String.fromCharCode(65 + num);  // 65 是 'A' 的 ASCII 码
 }
+
+const aiAnalysis = () => {
+  drawer.value = true;
+  if (aiAnalysisText.value == '') {
+    T1YClient.callFunc('ai_analysis', questionList.value[currentIndex.value]).then((res: any) => {
+      if (res.code == 200) {
+        aiAnalysisText.value = res.data.content;
+      }
+      loading.value = false;
+    })
+  }
+}
 </script>
 
 <template>
@@ -133,8 +153,9 @@ const numberToLetter = (num: number): string => {
             <br />
             <el-text class="mx-1" size="small">这里是我开发的临时刷题页面，它可以用来干嘛？自己录制题库或临时抱佛脚？🤓✌️</el-text>
         </div>
-        <br />
-        <el-upload v-if="!showNextButton"
+        <div v-if="!showNextButton">
+          <br />
+          <el-upload
             drag
             :before-upload="beforeUpload"
             accept=".xlsx">
@@ -143,14 +164,16 @@ const numberToLetter = (num: number): string => {
             <el-text class="mx-1" size="small">请选择 .xlsx 格式文件 <em>点击上传</em></el-text>
             </div>
             <template #tip>
-            <div class="el-upload__tip">
-                请上传一个 .xlsx 格式的题库文件，题库模版详见：<a href="/demo.xlsx" target="_blank" style="color: #003B4F;">demo.xlsx</a>
-            </div>
+              <div class="el-upload__tip">
+                  请上传一个 .xlsx 格式的题库文件，题库模版详见：<a href="/demo.xlsx" target="_blank" style="color: #003B4F;">demo.xlsx</a>
+              </div>
             </template>
-        </el-upload>
+          </el-upload>
+        </div>
         <div v-if="showNextButton">
             <div v-if="questionList.length > 0">
             <div>
+                <el-divider border-style="dashed" />
                 <el-text class="mx-1" style="display: flex;align-items: center;"><el-tag type="primary" size="small" effect="dark">{{ questionList[currentIndex].questionType }}</el-tag>&nbsp;{{ (currentIndex + 1) + '.' }}<span v-html="questionList[currentIndex].question"></span></el-text>
                 <!-- 根据题目类型动态渲染不同的组件 -->
                 <div v-if="questionList[currentIndex].questionType === '单选题'">
@@ -185,13 +208,24 @@ const numberToLetter = (num: number): string => {
                 </div>
             </div>
             <el-button-group>
-                <el-button type="primary" icon="ArrowLeft" @click="prevQuestion" :disabled="currentIndex === 0" size="small" link>上一题</el-button>
-                <el-button type="primary" @click="checkAnswer" :disabled="currentIndex === questionList.length" size="small" link>
+                <el-button type="primary" icon="ArrowLeft" @click="prevQuestion" :disabled="currentIndex === 0" link>上一题</el-button>
+                <el-button type="primary" link @click="aiAnalysis">AI 解析</el-button>
+                <el-button type="primary" @click="checkAnswer" :disabled="currentIndex === questionList.length" link>
                 下一题<el-icon class="el-icon--right"><ArrowRight /></el-icon>
                 </el-button>
             </el-button-group>
             </div>
         </div>
+        <el-drawer
+          v-model="drawer"
+          title="AI 解析"
+          direction="btt"
+          size="50%">
+          <el-skeleton v-if="loading" :rows="3" animated />
+          <small v-if="!loading">
+            <v-md-preview :text="aiAnalysisText"></v-md-preview>
+          </small>
+        </el-drawer>
     </div>
 </template>  
 
