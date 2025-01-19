@@ -300,3 +300,7 @@ To publish a photo, you only need to add the following types of data to the T1 b
 ## Buy me a coffee
 
 ![alt QR-Code](./src/assets/qr_code.png)
+
+## Project Stats
+
+[![Star History Chart](https://api.star-history.com/svg?repos=wwwanghua/kingstudy&type=Date)](https://star-history.com/#wwwanghua/kingstudy&Date)

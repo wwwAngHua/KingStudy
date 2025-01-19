@@ -300,3 +300,7 @@ interface Course {
 ## 请我喝杯咖啡
 
 ![alt QR-Code](./src/assets/qr_code.png)
+
+## 项目统计
+
+[![Star History Chart](https://api.star-history.com/svg?repos=wwwanghua/kingstudy&type=Date)](https://star-history.com/#wwwanghua/kingstudy&Date)
