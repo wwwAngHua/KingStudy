@@ -44,6 +44,15 @@ const getArchives = async () => {
     })
 }
 
+const getBackgroundImage = (index: number) => {
+    const randomNum = Math.floor(Math.random() * 10) + 1
+    return {
+        backgroundImage: archiveUrls[index] === 'https://api.t1y.net/storage/1500/photos/archives/draft.png'
+          ? `url(https://api.t1y.net/storage/1500/photos/random/${randomNum}.png)`
+          : `url(${archiveUrls[index]})`
+    }
+}
+
 getArchives()
 </script>
 
@@ -60,10 +69,7 @@ getArchives()
                 <RouterLink :to="'/archives/' + data._id"
                     ><div class="archive-item">
                         <div
-                            :style="{
-                                backgroundImage:
-                                    'url(' + archiveUrls[index] + ')',
-                            }"
+                            :style="getBackgroundImage(index)"
                             style="
                                 width: 70px;
                                 height: 70px;
