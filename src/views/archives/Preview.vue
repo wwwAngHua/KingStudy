@@ -64,13 +64,15 @@ getPost()
                     >{{ tag }}</el-tag
                 >
             </div>
-            <div style="margin-top: 5px;display: flex;align-items: center;">
+            <div style="margin-top: 5px; display: flex; align-items: center">
                 <el-avatar :size="20" :src="wwwanghua" />&nbsp;
                 <el-text class="mx-1" size="small">王华</el-text>&nbsp;
-                <el-text class="mx-1" size="small">Created at {{ formatDate(archives.createdAt) }}</el-text>
+                <el-text class="mx-1" size="small"
+                    >Created at {{ formatDate(archives.createdAt) }}</el-text
+                >
             </div>
             <el-text class="mx-1" size="small"
-                >Views: {{ archives.views }}</el-text
+                >Views: {{ archives.views + 1 }}</el-text
             >
             <el-divider border-style="dashed" />
             <div>
@@ -79,7 +81,19 @@ getPost()
                 </small>
             </div>
             <el-divider border-style="dashed" />
-            <el-text class="mx-1" style="color: black;"><strong>Copyright Notice:</strong> This article is original content owned by <a href="https://www.kingstudy.vip/" target="_blank" style="color: #0366D6;">kingstudy.vip</a> Unauthorized reproduction, citation, or commercial use is prohibited. For permissions or collaborations, please contact the author and credit the original source.</el-text>
+            <el-text class="mx-1" style="color: black"
+                ><strong>Copyright Notice:</strong> This article is original
+                content owned by
+                <a
+                    href="https://www.kingstudy.vip/"
+                    target="_blank"
+                    style="color: #0366d6"
+                    >kingstudy.vip</a
+                >
+                Unauthorized reproduction, citation, or commercial use is
+                prohibited. For permissions or collaborations, please contact
+                the author and credit the original source.</el-text
+            >
         </div>
     </div>
 </template>
