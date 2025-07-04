@@ -15,6 +15,141 @@ import * as XLSX from 'xlsx'
 import { ElMessage, ElNotification } from 'element-plus'
 import { T1YClient } from '../../api/t1y.ts'
 
+// Gamepad 支持
+import { onMounted, onUnmounted } from 'vue'
+
+// 手柄相关状态
+const gamepadIndex = ref<number | null>(null)
+let gamepadRafId: number | null = null
+let lastButtonStates: boolean[] = []
+
+// 选项聚焦索引
+const focusedOption = ref(0)
+
+// 是否有手柄连接
+const isGamepadConnected = ref(false)
+
+// 监听 gamepad 连接
+const onGamepadConnected = (e: GamepadEvent) => {
+    gamepadIndex.value = e.gamepad.index
+    isGamepadConnected.value = true
+    startGamepadPolling()
+}
+const onGamepadDisconnected = (e: GamepadEvent) => {
+    if (gamepadIndex.value === e.gamepad.index) {
+        gamepadIndex.value = null
+        isGamepadConnected.value = false
+        stopGamepadPolling()
+    }
+}
+
+function startGamepadPolling() {
+    if (gamepadRafId !== null) return
+    const poll = () => {
+        const gamepads = navigator.getGamepads()
+        const gp =
+            gamepadIndex.value !== null ? gamepads[gamepadIndex.value] : null
+        if (gp) {
+            handleGamepadInput(gp)
+        }
+        gamepadRafId = requestAnimationFrame(poll)
+    }
+    poll()
+}
+function stopGamepadPolling() {
+    if (gamepadRafId !== null) {
+        cancelAnimationFrame(gamepadRafId)
+        gamepadRafId = null
+    }
+}
+
+// Switch Pro 手柄按键映射
+// 0: B（确认/确定），1: A（返回/上一题），2: Y（AI 解析），3: X（确认/确定）
+function handleGamepadInput(gp: Gamepad) {
+    const btns = gp.buttons.map((b) => b.pressed)
+    if (!lastButtonStates.length) lastButtonStates = btns.slice()
+
+    // 选项切换（上下/左右）
+    if (
+        (btns[12] && !lastButtonStates[12]) ||
+        (btns[14] && !lastButtonStates[14])
+    ) {
+        moveFocus(-1)
+    }
+    if (
+        (btns[13] && !lastButtonStates[13]) ||
+        (btns[15] && !lastButtonStates[15])
+    ) {
+        moveFocus(1)
+    }
+    // B(0) 或 X(3)：选择/下一题
+    if (
+        (btns[0] && !lastButtonStates[0]) ||
+        (btns[3] && !lastButtonStates[3])
+    ) {
+        selectFocusedOption()
+    }
+    // A(1)：上一题
+    if (btns[1] && !lastButtonStates[1]) {
+        prevQuestion()
+    }
+    // Y(2)：AI 解析
+    if (btns[2] && !lastButtonStates[2]) {
+        aiAnalysis()
+    }
+    lastButtonStates = btns.slice()
+}
+
+function moveFocus(delta: number) {
+    if (!showNextButton.value || !questionList.value.length) return
+    const q = questionList.value[currentIndex.value]
+    if (q.questionType === '单选题' || q.questionType === '多选题') {
+        const optLen = q.options.length
+        focusedOption.value = (focusedOption.value + delta + optLen) % optLen
+    }
+}
+
+function selectFocusedOption() {
+    if (!showNextButton.value || !questionList.value.length) return
+    const q = questionList.value[currentIndex.value]
+    if (q.questionType === '单选题') {
+        userAnswer.value = String.fromCharCode(65 + focusedOption.value)
+        checkAnswer()
+    } else if (q.questionType === '多选题') {
+        const letter = String.fromCharCode(65 + focusedOption.value)
+        const idx = userAnswer.value.indexOf(letter)
+        if (idx === -1) {
+            userAnswer.value.push(letter)
+        } else {
+            userAnswer.value.splice(idx, 1)
+        }
+    } else if (q.questionType === '判断题') {
+        // 0:A(正确), 1:B(错误)
+        userAnswer.value = focusedOption.value === 0 ? 'A' : 'B'
+        checkAnswer()
+    }
+}
+
+// 题目切换时重置聚焦
+function resetFocus() {
+    focusedOption.value = 0
+}
+
+onMounted(() => {
+    window.addEventListener('gamepadconnected', onGamepadConnected)
+    window.addEventListener('gamepaddisconnected', onGamepadDisconnected)
+    // 检查页面加载时是否已连接手柄
+    const pads = navigator.getGamepads()
+    if (pads && Array.from(pads).some((p) => p)) {
+        isGamepadConnected.value = true
+    }
+})
+onUnmounted(() => {
+    window.removeEventListener('gamepadconnected', onGamepadConnected)
+    window.removeEventListener('gamepaddisconnected', onGamepadDisconnected)
+    stopGamepadPolling()
+})
+
 const drawer = ref(false)
 const loading = ref(true)
 
@@ -151,6 +286,7 @@ const nextQuestion = () => {
     if (currentIndex.value < questionList.value.length - 1) {
         currentIndex.value++
         setUserAnswerType(questionList.value[currentIndex.value].questionType) // 设置正确的答案类型
+        resetFocus()
     } else {
         ElNotification({
             title: '完结',
@@ -168,12 +304,14 @@ const prevQuestion = () => {
     if (currentIndex.value > 0) {
         currentIndex.value--
         setUserAnswerType(questionList.value[currentIndex.value].questionType) // 设置正确的答案类型
+        resetFocus()
     }
 }
 
 const resetQuiz = () => {
     currentIndex.value = 0 // 从第一题开始
     setUserAnswerType(questionList.value[currentIndex.value].questionType) // 根据题目类型初始化答案类型
+    resetFocus()
 }
 
 const numberToLetter = (num: number): string => {
@@ -243,13 +381,17 @@ const aiAnalysis = () => {
                     <el-text
                         class="mx-1"
                         style="display: flex; align-items: center"
-                        ><el-tag type="primary" size="small" effect="dark">{{
-                            questionList[currentIndex].questionType
-                        }}</el-tag
-                        >&nbsp;{{ currentIndex + 1 + '.'
-                        }}<span
-                            v-html="questionList[currentIndex].question"></span
-                    ></el-text>
+                        :size="isGamepadConnected ? 'large' : 'default'">
+                        <el-tag
+                            type="primary"
+                            :size="isGamepadConnected ? 'large' : 'small'"
+                            effect="dark">
+                            {{ questionList[currentIndex].questionType }}
+                        </el-tag>
+                        &nbsp;{{ currentIndex + 1 + '.' }}
+                        <span
+                            v-html="questionList[currentIndex].question"></span>
+                    </el-text>
                     <!-- 根据题目类型动态渲染不同的组件 -->
                     <div
                         v-if="
@@ -263,9 +405,29 @@ const aiAnalysis = () => {
                                     ].options"
                                     :key="index"
                                     :value="String.fromCharCode(65 + index)"
-                                    style="display: block">
+                                    style="display: block"
+                                    :class="{
+                                        'gamepad-focused':
+                                            isGamepadConnected &&
+                                            focusedOption === index,
+                                    }"
+                                    :size="
+                                        isGamepadConnected ? 'large' : undefined
+                                    ">
                                     <span>{{ numberToLetter(index) }}</span
                                     >.<span v-html="option"></span>
+                                    <span
+                                        v-if="
+                                            isGamepadConnected &&
+                                            focusedOption === index
+                                        "
+                                        style="
+                                            color: #409eff;
+                                            margin-left: 8px;
+                                            font-size: 12px;
+                                        "
+                                        >🎮</span
+                                    >
                                 </el-radio>
                             </div>
                         </el-radio-group>
@@ -287,9 +449,29 @@ const aiAnalysis = () => {
                                         currentIndex
                                     ].options"
                                     :key="index"
-                                    :value="String.fromCharCode(65 + index)">
+                                    :value="String.fromCharCode(65 + index)"
+                                    :class="{
+                                        'gamepad-focused':
+                                            isGamepadConnected &&
+                                            focusedOption === index,
+                                    }"
+                                    :size="
+                                        isGamepadConnected ? 'large' : undefined
+                                    ">
                                     <span>{{ numberToLetter(index) }}</span
                                     >.<span v-html="option"></span>
+                                    <span
+                                        v-if="
+                                            isGamepadConnected &&
+                                            focusedOption === index
+                                        "
+                                        style="
+                                            color: #409eff;
+                                            margin-left: 8px;
+                                            font-size: 12px;
+                                        "
+                                        >🎮</span
+                                    >
                                 </el-checkbox>
                             </div>
                         </el-checkbox-group>
@@ -300,18 +482,67 @@ const aiAnalysis = () => {
                         ">
                         <el-radio-group v-model="userAnswer">
                             <div style="margin-top: 10px; margin-left: 5px">
-                                <el-radio value="A">A.正确</el-radio>
+                                <el-radio
+                                    value="A"
+                                    :class="{
+                                        'gamepad-focused':
+                                            isGamepadConnected &&
+                                            focusedOption === 0,
+                                    }"
+                                    :size="
+                                        isGamepadConnected ? 'large' : undefined
+                                    ">
+                                    A.正确
+                                    <span
+                                        v-if="
+                                            isGamepadConnected &&
+                                            focusedOption === 0
+                                        "
+                                        style="
+                                            color: #409eff;
+                                            margin-left: 8px;
+                                            font-size: 12px;
+                                        "
+                                        >🎮</span
+                                    >
+                                </el-radio>
                                 <br />
-                                <el-radio value="B">B.错误</el-radio>
+                                <el-radio
+                                    value="B"
+                                    :class="{
+                                        'gamepad-focused':
+                                            isGamepadConnected &&
+                                            focusedOption === 1,
+                                    }"
+                                    :size="
+                                        isGamepadConnected ? 'large' : undefined
+                                    ">
+                                    B.错误
+                                    <span
+                                        v-if="
+                                            isGamepadConnected &&
+                                            focusedOption === 1
+                                        "
+                                        style="
+                                            color: #409eff;
+                                            margin-left: 8px;
+                                            font-size: 12px;
+                                        "
+                                        >🎮</span
+                                    >
+                                </el-radio>
                             </div>
                         </el-radio-group>
                     </div>
                     <div v-if="showAnswer" style="margin-bottom: 10px">
-                        <el-text class="mx-1" size="small" style="color: red"
-                            >答案错误！正确答案为：{{
+                        <el-text
+                            class="mx-1"
+                            :size="isGamepadConnected ? 'large' : 'small'"
+                            style="color: red">
+                            答案错误！正确答案为：{{
                                 questionList[currentIndex].correctAnswer
-                            }}</el-text
-                        >
+                            }}
+                        </el-text>
                     </div>
                 </div>
                 <el-button-group>
@@ -321,16 +552,22 @@ const aiAnalysis = () => {
                         @click="prevQuestion"
                         :disabled="currentIndex === 0"
                         link
+                        :size="isGamepadConnected ? 'large' : undefined"
                         >上一题</el-button
                     >
-                    <el-button type="primary" link @click="aiAnalysis"
+                    <el-button
+                        type="primary"
+                        link
+                        @click="aiAnalysis"
+                        :size="isGamepadConnected ? 'large' : undefined"
                         >AI 解析</el-button
                     >
                     <el-button
                         type="primary"
                         @click="checkAnswer"
                         :disabled="currentIndex === questionList.length"
-                        link>
+                        link
+                        :size="isGamepadConnected ? 'large' : undefined">
                         下一题<el-icon class="el-icon--right"
                             ><ArrowRight
                         /></el-icon>
@@ -348,3 +585,11 @@ const aiAnalysis = () => {
 </template>
 
 <style scoped></style>
+
+<style scoped>
+.gamepad-focused {
+    background: #e6f7ff !important;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+</style>
