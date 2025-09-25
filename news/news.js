@@ -23,7 +23,8 @@ function main() {
     const oldId = db.collection(name).find({}, 1, 1, { id: -1 })
     if (oldId != null) {
         if (data[0].id > oldId[0].id) {
-            if (db.collection(name).createOne(data[0]) == null) {
+            const items = data.slice(0, data[0].id - oldId[0].id)
+            if (db.collection(name).createOne(items) == null) {
                 return '添加失败'
             }
         }

@@ -21,6 +21,11 @@ const routes: Array<RouteRecordRaw> = [
         meta: { title: 'News' },
     },
     {
+        path: '/news/:pathMatch(.*)*',
+        component: () => import('../views/news/Preview.vue'),
+        meta: { title: 'Preview' },
+    },
+    {
         path: '/archives',
         component: () => import('../views/archives/Archives.vue'),
         meta: { title: 'Archives' },

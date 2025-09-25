@@ -10,20 +10,25 @@ const baseURL = import.meta.env.VITE_APP_KOALA_OSS_BASE_URL
 const loading = ref(true)
 
 interface News {
+    _id: string
     id: number
     image: string
     imageUrl: string
     title: string
     url: string
+    koalaUrl: string
+    content: string
 }
 
 const news = ref<Array<News>>([])
 
 let filter: Array<any> = [
     { $match: {} },
-    { $sort: { createdAt: route.fullPath == '/' ? 1 : -1 } },
+    { $sort: { id: -1 } },
     {
         $project: {
+            url: 0,
+            content: 0,
             createdAt: 0,
             updatedAt: 0,
         },
@@ -38,7 +43,7 @@ const getNews = async () => {
         news.value = res.data.data.map((item: any) => ({
             ...item,
             imageUrl: `${baseURL}/${item.image}`,
-            url: 'https://koala-oss.app/news/' + item.id,
+            koalaUrl: 'https://koala-oss.app/news/' + item.id,
         }))
         loading.value = false
     })
@@ -61,11 +66,11 @@ getNews()
                 lazy
                 v-for="(data, index) in news"
                 :key="index">
-                <a :href="data.url" target="_blank">
+                <RouterLink :to="'/news/' + data._id">
                     <div
                         style="
                             border: solid 1px #003b4f;
-                            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
                         ">
                         <img
                             :src="data.imageUrl"
@@ -91,7 +96,7 @@ getNews()
                             >
                         </div>
                     </div>
-                </a>
+                </RouterLink>
             </el-col>
         </el-row>
     </div>
