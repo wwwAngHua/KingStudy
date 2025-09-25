@@ -7,7 +7,8 @@ import Archive from '../../components/Archive.vue'
         <el-text class="mx-1" style="color: black">Archives</el-text>
         <br />
         <el-text class="mx-1" size="small"
-            >Here are some of my posts, recording my learning journey; I hope you find them helpful, too.</el-text
+            >Here are some of my posts, recording my learning journey; I hope
+            you find them helpful, too.</el-text
         >
         <br /><br />
         <Archive />

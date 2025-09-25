@@ -21,7 +21,7 @@ export class T1YClient {
     static async findAll(collection: string, page: number, size: number) {
         return request(
             `/v5/classes/${collection}`,
-            {page: page, size: size},
+            { page: page, size: size },
             'get',
         )
     }
@@ -67,7 +67,7 @@ export class T1YClient {
     }
     // 发送短信验证码
     static async sendSMSCode(phone: string) {
-        return request(`/v5/sys/code`, {phone: phone}, 'get')
+        return request(`/v5/sys/code`, { phone: phone }, 'get')
     }
     // 调用云函数
     static async callFunc(name: string, params: any) {
@@ -85,7 +85,7 @@ export class T1YClient {
     static async get_temp_notes(name: string) {
         return request(
             `/${import.meta.env.VITE_APP_APP_ID}/note`,
-            {name: name},
+            { name: name },
             'get',
         )
     }

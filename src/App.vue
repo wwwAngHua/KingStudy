@@ -46,11 +46,23 @@ getMusicId()
                                 >
                             </div></el-col
                         >
-                        <el-col id="menuCol" :xs="0" :sm="14" :md="14" :lg="14" :xl="14"
+                        <el-col
+                            id="menuCol"
+                            :xs="0"
+                            :sm="14"
+                            :md="14"
+                            :lg="14"
+                            :xl="14"
                             ><div style="float: right">
                                 <el-text class="mx-1"
                                     ><RouterLink to="/"
                                         >Home</RouterLink
+                                    ></el-text
+                                >
+                                &nbsp;&nbsp;
+                                <el-text class="mx-1"
+                                    ><RouterLink to="/news"
+                                        >News</RouterLink
                                     ></el-text
                                 >
                                 &nbsp;&nbsp;
@@ -85,7 +97,13 @@ getMusicId()
                                 >
                             </div></el-col
                         >
-                        <el-col id="menuBtn" :xs="14" :sm="0" :md="0" :lg="0" :xl="0"
+                        <el-col
+                            id="menuBtn"
+                            :xs="14"
+                            :sm="0"
+                            :md="0"
+                            :lg="0"
+                            :xl="0"
                             ><div style="float: right">
                                 <el-button
                                     type="primary"
@@ -102,6 +120,11 @@ getMusicId()
                     ><div v-if="menuDisplay" class="menu">
                         <el-text class="mx-1"
                             ><a @click="goToPage('/')">Home</a></el-text
+                        >
+                        <br />
+                        <div class="box" />
+                        <el-text class="mx-1"
+                            ><a @click="goToPage('/news')">News</a></el-text
                         >
                         <br />
                         <div class="box" />

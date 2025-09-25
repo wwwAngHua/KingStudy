@@ -8,18 +8,30 @@ axios.defaults.baseURL = import.meta.env.VITE_APP_BASE_API // 设置请求地址
 axios.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8' // 设置传参方式（JSON）
 
 // 请求拦截器
-axios.interceptors.request.use((config) => {
-    if (config && config.url) {
-        const timestamp = Math.floor(Date.now() / 1000) // 获取当前unix时间戳，精确到秒
-        const nonceStr = MD5(uuidv4()).toString() // 生成32位随机码
-        // 设置加密请求头
-        config.headers['X-T1Y-Application-ID'] = import.meta.env.VITE_APP_APP_ID
-        config.headers['X-T1Y-Api-Key'] = import.meta.env.VITE_APP_API_KEY
-        config.headers['X-T1Y-Safe-NonceStr'] = nonceStr
-        config.headers['X-T1Y-Safe-Timestamp'] = timestamp
-        config.headers['X-T1Y-Safe-Sign'] = MD5(new URL(import.meta.env.VITE_APP_T1_CLOUD_SERVICE_DOMAIN + config.url).pathname + import.meta.env.VITE_APP_APP_ID + import.meta.env.VITE_APP_API_KEY + nonceStr + timestamp + import.meta.env.VITE_APP_SECRET_KEY).toString()
-    }
-    return config
+axios.interceptors.request.use(
+    (config) => {
+        if (config && config.url) {
+            const timestamp = Math.floor(Date.now() / 1000) // 获取当前unix时间戳，精确到秒
+            const nonceStr = MD5(uuidv4()).toString() // 生成32位随机码
+            // 设置加密请求头
+            config.headers['X-T1Y-Application-ID'] =
+                import.meta.env.VITE_APP_APP_ID
+            config.headers['X-T1Y-Api-Key'] = import.meta.env.VITE_APP_API_KEY
+            config.headers['X-T1Y-Safe-NonceStr'] = nonceStr
+            config.headers['X-T1Y-Safe-Timestamp'] = timestamp
+            config.headers['X-T1Y-Safe-Sign'] = MD5(
+                new URL(
+                    import.meta.env.VITE_APP_T1_CLOUD_SERVICE_DOMAIN +
+                        config.url,
+                ).pathname +
+                    import.meta.env.VITE_APP_APP_ID +
+                    import.meta.env.VITE_APP_API_KEY +
+                    nonceStr +
+                    timestamp +
+                    import.meta.env.VITE_APP_SECRET_KEY,
+            ).toString()
+        }
+        return config
     },
     (error) => {
         return Promise.reject(error)
@@ -55,10 +67,12 @@ export function request(url = '', params = {}, method = 'post') {
             data: method === 'get' ? undefined : params,
             params: method === 'get' ? params : undefined,
         }
-        axios(config).then((res) => {
-            resolve(res)
-        }).catch((err) => {
-            reject(err)
-        })
+        axios(config)
+            .then((res) => {
+                resolve(res)
+            })
+            .catch((err) => {
+                reject(err)
+            })
     })
 }

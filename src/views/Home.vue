@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import News from './news/News.vue'
 import Archives from './archives/Archives.vue'
 import Projects from './projects/Projects.vue'
 </script>
@@ -6,6 +7,8 @@ import Projects from './projects/Projects.vue'
 <template>
     <div>
         <Archives />
+        <br /><br />
+        <News />
         <br /><br />
         <Projects />
     </div>

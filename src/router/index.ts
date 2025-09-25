@@ -16,6 +16,11 @@ const routes: Array<RouteRecordRaw> = [
         meta: { title: 'KingStudy' },
     },
     {
+        path: '/news',
+        component: () => import('../views/news/News.vue'),
+        meta: { title: 'News' },
+    },
+    {
         path: '/archives',
         component: () => import('../views/archives/Archives.vue'),
         meta: { title: 'Archives' },

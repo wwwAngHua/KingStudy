@@ -98,7 +98,19 @@ getTempNotes()
             <v-md-editor v-model="text" height="400px"></v-md-editor>
         </div>
         <el-divider border-style="dashed" />
-        <el-text class="mx-1" style="color: black;"><strong>Copyright Notice:</strong> This article is original content owned by <a href="https://www.kingstudy.vip/" target="_blank" style="color: #0366D6;">kingstudy.vip</a> Unauthorized reproduction, citation, or commercial use is prohibited. For permissions or collaborations, please contact the author and credit the original source.</el-text>
+        <el-text class="mx-1" style="color: black"
+            ><strong>Copyright Notice:</strong> This article is original content
+            owned by
+            <a
+                href="https://www.kingstudy.vip/"
+                target="_blank"
+                style="color: #0366d6"
+                >kingstudy.vip</a
+            >
+            Unauthorized reproduction, citation, or commercial use is
+            prohibited. For permissions or collaborations, please contact the
+            author and credit the original source.</el-text
+        >
     </div>
 </template>
 

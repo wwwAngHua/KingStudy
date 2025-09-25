@@ -47,9 +47,11 @@ const getArchives = async () => {
 const getBackgroundImage = (index: number) => {
     const randomNum = Math.floor(Math.random() * 10) + 1
     return {
-        backgroundImage: archiveUrls[index] === 'https://api.t1y.net/storage/1500/photos/archives/draft.png'
-          ? `url(https://api.t1y.net/storage/1500/photos/random/${randomNum}.png)`
-          : `url(${archiveUrls[index]})`
+        backgroundImage:
+            archiveUrls[index] ===
+            'https://api.t1y.net/storage/1500/photos/archives/draft.png'
+                ? `url(https://api.t1y.net/storage/1500/photos/random/${randomNum}.png)`
+                : `url(${archiveUrls[index]})`,
     }
 }
 

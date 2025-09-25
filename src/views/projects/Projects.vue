@@ -7,7 +7,8 @@ import Project from '../../components/Project.vue'
         <el-text class="mx-1" style="color: black">Projects</el-text>
         <br />
         <el-text class="mx-1" size="small"
-            >The following are my main independent full-stack development projects. I hope you find them interesting.</el-text
+            >The following are my main independent full-stack development
+            projects. I hope you find them interesting.</el-text
         >
         <br />
         <a href="https://github.com/wwwAngHua" target="_blank"
