@@ -71,10 +71,11 @@ getNews()
             <el-divider border-style="dashed" />
             <div>
                 <el-row :gutter="20">
-                    <el-col :span="4">
+                    <el-col :span="4" :xs="24" :sm="24" :md="4">
                         <img :src="news.imageUrl" class="image" />
                     </el-col>
-                    <el-col :span="20">
+                    <el-col :span="20" :xs="24" :sm="24" :md="20">
+                        <div class="content-col"></div>
                         <el-text class="mx-1" style="color: black">{{
                             news.content
                         }}</el-text>
@@ -113,5 +114,13 @@ getNews()
     object-fit: cover;
     object-position: top;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+.content-col {
+    height: 0;
+}
+@media (max-width: 1000px) {
+    .content-col {
+        height: 20px;
+    }
 }
 </style>
