@@ -41,7 +41,7 @@ const getNews = async () => {
         return
     }
     if (route.fullPath == '/') {
-        filter.push({ $limit: 3 })
+        filter.push({ $limit: 2 })
     }
     T1YClient.aggregate('news', filter).then((res: any) => {
         news.value = res.data.data.map((item: any) => ({
