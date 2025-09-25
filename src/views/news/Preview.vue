@@ -15,6 +15,7 @@ interface News {
     image: string
     imageUrl: string
     title: string
+    tags: string[]
     url: string
     koalaUrl: string
     content: string
@@ -26,6 +27,7 @@ const news = ref<News>({
     image: '',
     imageUrl: '',
     title: '',
+    tags: [],
     url: '',
     koalaUrl: '',
     content: '',
@@ -57,6 +59,14 @@ getNews()
                 <el-text class="mx-1" size="large" style="color: black">{{
                     news.title
                 }}</el-text>
+                <el-tag
+                    size="small"
+                    round
+                    v-for="(tag, tagIndex) in news.tags"
+                    :key="tagIndex"
+                    style="margin-left: 5px"
+                    >{{ tag }}</el-tag
+                >
             </div>
             <el-divider border-style="dashed" />
             <div>
