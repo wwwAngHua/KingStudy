@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onActivated } from 'vue'
 import { T1YClient } from '../api/t1y.ts'
 import { useRoute } from 'vue-router'
 
@@ -32,6 +32,10 @@ let filter: Array<any> = [
 ]
 
 const getArchives = async () => {
+    if (archives.value.length > 0) {
+        loading.value = false
+        return
+    }
     if (route.fullPath == '/') {
         filter.push({ $limit: 1 })
     }
@@ -55,7 +59,15 @@ const getBackgroundImage = (index: number) => {
     }
 }
 
-getArchives()
+onMounted(() => {
+    getArchives()
+})
+
+onActivated(() => {
+    if (archives.value.length === 0) {
+        getArchives()
+    }
+})
 </script>
 
 <template>

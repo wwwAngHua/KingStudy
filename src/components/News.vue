@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onActivated } from 'vue'
 import { T1YClient } from '../api/t1y.ts'
 import { useRoute } from 'vue-router'
 
@@ -36,6 +36,10 @@ let filter: Array<any> = [
 ]
 
 const getNews = async () => {
+    if (news.value.length > 0) {
+        loading.value = false
+        return
+    }
     if (route.fullPath == '/') {
         filter.push({ $limit: 3 })
     }
@@ -49,7 +53,15 @@ const getNews = async () => {
     })
 }
 
-getNews()
+onMounted(() => {
+    getNews()
+})
+
+onActivated(() => {
+    if (news.value.length === 0) {
+        getNews()
+    }
+})
 </script>
 
 <template>

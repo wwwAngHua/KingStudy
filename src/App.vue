@@ -30,7 +30,7 @@ getMusicId()
 <template>
     <div class="container">
         <el-container>
-            <el-header class="header">
+            <el-header class="header fixed-top">
                 <div style="padding-top: 15px">
                     <el-row>
                         <el-col :span="10"
@@ -115,7 +115,7 @@ getMusicId()
                     </el-row>
                 </div>
             </el-header>
-            <el-main style="padding: 0px">
+            <el-main style="padding: 0px; margin-top: 50px">
                 <transition name="slide"
                     ><div v-if="menuDisplay" class="menu">
                         <el-text class="mx-1"
@@ -182,7 +182,12 @@ getMusicId()
                     >
                 </div>
                 <div style="padding: 20px">
-                    <router-view></router-view>
+                    <router-view v-slot="{ Component }">
+                        <keep-alive
+                            include="Home,News,Archives,Projects,Photos">
+                            <component :is="Component" />
+                        </keep-alive>
+                    </router-view>
                 </div>
             </el-main>
         </el-container>
@@ -227,5 +232,12 @@ getMusicId()
     #menuBtn {
         display: none !important;
     }
+}
+.fixed-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
 }
 </style>
