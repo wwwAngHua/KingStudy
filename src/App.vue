@@ -115,7 +115,7 @@ getMusicId()
                     </el-row>
                 </div>
             </el-header>
-            <el-main style="padding: 0px; margin-top: 50px">
+            <el-main style="padding: 0px; margin-top: 70px">
                 <transition name="slide"
                     ><div v-if="menuDisplay" class="menu">
                         <el-text class="mx-1"
