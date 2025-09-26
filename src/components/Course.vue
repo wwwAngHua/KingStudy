@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onActivated } from 'vue'
 import { T1YClient } from '../api/t1y.ts'
 
 const loading = ref(true)
@@ -16,6 +16,10 @@ const courses = ref<Array<Course>>([])
 let courseUrls: string[]
 
 const getCourses = async () => {
+    if (courses.value.length > 0) {
+        loading.value = false
+        return
+    }
     T1YClient.aggregate('courses', [
         { $match: {} },
         { $sort: { createdAt: -1 } },
@@ -28,7 +32,15 @@ const getCourses = async () => {
     })
 }
 
-getCourses()
+onMounted(() => {
+    getCourses()
+})
+
+onActivated(() => {
+    if (courses.value.length === 0) {
+        getCourses()
+    }
+})
 </script>
 
 <template>

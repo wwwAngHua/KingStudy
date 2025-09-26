@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onActivated } from 'vue'
 import { T1YClient } from '../api/t1y.ts'
 
 const loading = ref(true)
@@ -16,6 +16,10 @@ const projects = ref<Array<Project>>([])
 let projectUrls: string[]
 
 const getProjects = async () => {
+    if (projects.value.length > 0) {
+        loading.value = false
+        return
+    }
     T1YClient.aggregate('projects', [
         { $match: {} },
         {
@@ -33,7 +37,15 @@ const getProjects = async () => {
     })
 }
 
-getProjects()
+onMounted(() => {
+    getProjects()
+})
+
+onActivated(() => {
+    if (projects.value.length === 0) {
+        getProjects()
+    }
+})
 </script>
 
 <template>

@@ -115,7 +115,7 @@ getMusicId()
                     </el-row>
                 </div>
             </el-header>
-            <el-main style="padding: 0px; margin-top: 70px">
+            <el-main style="padding: 0px; margin-top: 60px">
                 <transition name="slide"
                     ><div v-if="menuDisplay" class="menu">
                         <el-text class="mx-1"
@@ -184,7 +184,7 @@ getMusicId()
                 <div style="padding: 20px">
                     <router-view v-slot="{ Component }">
                         <keep-alive
-                            include="Home,News,Archives,Projects,Photos">
+                            include="Home,News,Archives,Projects,Photos,About">
                             <component :is="Component" />
                         </keep-alive>
                     </router-view>
