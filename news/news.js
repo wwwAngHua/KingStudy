@@ -24,7 +24,7 @@ function main() {
     if (oldId != null) {
         if (data[0].id > oldId[0].id) {
             const items = data.slice(0, data[0].id - oldId[0].id)
-            if (db.collection(name).createOne(items) == null) {
+            if (db.collection(name).createMany(items) == null) {
                 return '添加失败'
             }
         }
