@@ -7,6 +7,8 @@
             content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <title>KingStudy</title>
         <link rel="icon" type="image/png" href="/favicon.png" />
+        <link rel="stylesheet" href="/css/sakura.min.css" />
+        <link rel="stylesheet" href="/css/snowfall.css" />
         <meta name="author" content="Wang Hua (王华)" />
         <meta
             name="keywords"
@@ -32,5 +34,131 @@
     <body>
         <div id="app"></div>
         <script type="module" src="/src/main.ts"></script>
+        <script src="/js/lunar.js"></script>
+        <script src="/js/sakura.min.js"></script>
+        <script src="/js/snowfall.js"></script>
+        <script>
+            new Sakura('body')
+
+            // new Snowfall({
+            //     minSize: 10,
+            //     maxSize: 30,
+            //     type: 'text',
+            //     content: getTodayEmoji(),
+            //     fadeOut: true,
+            //     autoplay: true,
+            //     interval: 200,
+            // })
+
+            function getTodayEmoji() {
+                const today = new Date()
+                const year = today.getFullYear()
+                const month = String(today.getMonth() + 1).padStart(2, '0')
+                const day = String(today.getDate()).padStart(2, '0')
+
+                const md = `${month}-${day}`
+                const ymd = `${year}-${month}-${day}`
+
+                // 1. 公历固定节日
+                const fixedFestivals = {
+                    '01-01': '🎉',
+                    '02-14': '❤️',
+                    '03-08': '👩',
+                    '03-12': '🌳',
+                    '04-01': '😜',
+                    '04-22': '🌍',
+                    '05-01': '🛠️',
+                    '05-04': '🧑‍🎓',
+                    '05-12': '👩‍⚕️',
+                    '06-01': '🧒',
+                    '08-01': '🎖️',
+                    '09-10': '🍎',
+                    '10-01': '🇨🇳',
+                    '11-09': '🚒',
+                    '12-25': '🎄',
+                }
+                if (fixedFestivals[md]) return fixedFestivals[md]
+
+                // 2. 农历节日（手动对应公历日期示例，实际可用农历转换库自动算）
+                const lunarFestivals = {
+                    '2025-01-29': '🧧', // 春节
+                    '2025-02-14': '🏮', // 元宵
+                    '2025-06-25': '🐉', // 端午
+                    '2025-09-06': '🌕', // 中秋
+                    '2025-10-29': '🌄', // 重阳
+                }
+                if (lunarFestivals[ymd]) return lunarFestivals[ymd]
+
+                // 3. 节气（近似公历日期）
+                const jieqiMap = {
+                    '02-04': '🌱',
+                    '02-19': '💧',
+                    '03-05': '🐞',
+                    '03-20': '🌸',
+                    '04-04': '🕯️',
+                    '04-20': '🌾',
+                    '05-05': '☀️',
+                    '05-21': '🌿',
+                    '06-05': '🌾',
+                    '06-21': '🌞',
+                    '07-07': '🥵',
+                    '07-22': '🔥',
+                    '08-07': '🍁',
+                    '08-23': '🌬️',
+                    '09-07': '💦',
+                    '09-23': '🍂',
+                    '10-08': '❄️',
+                    '10-23': '🍃',
+                    '11-07': '⛄',
+                    '11-22': '❄️',
+                    '12-07': '🌨️',
+                    '12-22': '❄️',
+                    '01-06': '🥶',
+                    '01-20': '❄️',
+                }
+                if (jieqiMap[md]) return jieqiMap[md]
+
+                // 4. 随机 emoji
+                const emojiArray = [
+                    '🌸',
+                    '🍂',
+                    '❄️',
+                    '🌷',
+                    '🌹',
+                    '🥀',
+                    '☃️',
+                    '🎀',
+                    '😍',
+                    '🥰',
+                    '🥺',
+                    '🧣',
+                    '👋🏻',
+                    '🧑🏻‍💻',
+                    '👸🏻',
+                    '🎅🏼',
+                    '🐼',
+                    '🐻‍❄️',
+                    '🐻',
+                    '🐨',
+                    '🐹',
+                    '🐰',
+                    '🐷',
+                    '🐽',
+                    '🐣',
+                    '🦄',
+                    '🐈',
+                    '💐',
+                    '🌺',
+                    '🌻',
+                    '🌚',
+                    '☀️',
+                    '🌤',
+                    '⛈️',
+                    '🎂',
+                    '☕️',
+                ]
+                return emojiArray[Math.floor(Math.random() * emojiArray.length)]
+            }
+        </script>
     </body>
 </html>
